@@ -1,0 +1,19 @@
+version: "3"
+
+tasks:
+  build.snapshot:
+    desc: Build locally and ignore a dirty git state.
+    cmds:
+      - goreleaser build --clean --snapshot
+  build:
+    desc: Build locally, but fail if git state is dirty.
+    cmds:
+    - goreleaser build --clean
+  release:
+    desc: Build and submit a new release.
+    cmds:
+    - goreleaser release --clean
+  release.snapshot:
+    desc: Build and submit a new release, but ignore dirty git state.
+    cmds:
+    - goreleaser release --snapshot --clean

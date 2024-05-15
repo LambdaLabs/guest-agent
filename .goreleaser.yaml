@@ -1,11 +1,3 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
-
 version: 1
 project_name: lambda-metrics-stack
 
@@ -17,6 +9,7 @@ builds:
     - linux
     goarch:
     - arm64
+    - amd64
 
 nfpms:
   - id: default
@@ -28,19 +21,14 @@ nfpms:
     formats: [deb]
     dependencies:
     - telegraf
-    provides:
-    - telegraf
     - lambda-metrics-stack
-    conflicts:
-    - telegraf
-    replaces:
-    - telegraf
     contents:
     - src: files/etc/lambda/metrics-stack
       dst: /etc/lambda/metrics-stack
       type: tree
     scripts:
       preinstall: "scripts/preinstall.sh"
+      postinstall: "scripts/postinstall.sh"
 
 archives:
   - id: default
@@ -73,7 +61,7 @@ release:
     name: metrics-stack
   ids:
   - default
-  
+
 
 env_files:
   github_token: /Users/landon/.github/tokens/lambda-metrics-stack-test
