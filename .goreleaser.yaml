@@ -9,6 +9,16 @@
 version: 1
 project_name: lambda-metrics-stack
 
+builds:
+  - id: default
+    main: ./
+    binary: lambda-support
+    goos:
+    - linux
+    goarch:
+    - arm64
+    skip: true
+
 nfpms:
   - id: default
     package_name: lambda-metrics-stack
@@ -42,14 +52,6 @@ before:
     - go mod tidy
     # you may remove this if you don't need go generate
     - go generate ./...
-
-builds:
-  - env:
-      - CGO_ENABLED=0
-    goos:
-      - linux
-      - windows
-      - darwin
 
 archives:
   - format: tar.gz
