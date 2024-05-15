@@ -17,7 +17,6 @@ builds:
     - linux
     goarch:
     - arm64
-    skip: true
 
 nfpms:
   - id: default
@@ -25,8 +24,8 @@ nfpms:
     vendor: Lambda Labs
     homepage: https://github.com/lambdal/metrics-stack
     maintainer: Landon Clipp <landon@lambdal.com>
-    formats:
-    - deb
+    description: Description
+    formats: [deb]
     dependencies:
     - telegraf
     provides:
@@ -43,18 +42,10 @@ nfpms:
     scripts:
       preinstall: "scripts/preinstall.sh"
 
-
-
-
-before:
-  hooks:
-    # You may remove this if you don't use go modules.
-    - go mod tidy
-    # you may remove this if you don't need go generate
-    - go generate ./...
-
 archives:
-  - format: tar.gz
+  - id: default
+    format: tar.gz
+    builds: [default]
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
@@ -74,3 +65,15 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+
+release:
+  github:
+    owner: lambdal
+    name: metrics-stack
+  ids:
+  - default
+  
+
+env_files:
+  github_token: /Users/landon/.github/tokens/lambda-metrics-stack-test
