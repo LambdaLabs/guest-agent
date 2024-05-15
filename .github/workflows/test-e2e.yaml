@@ -1,0 +1,74 @@
+name: Test e2e
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to promote, without the leading 'v'."
+        type: string
+        required: true
+
+run-name: "Test v${{ github.event.inputs.version }} e2e | @${{ github.actor}}"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:  
+  test_e2e:
+    runs-on: lambda-ubuntu-latest
+    environment: test-e2e
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Install apt packages
+        run: sudo apt install -y openssh-client
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./tools/go.mod
+          check-latest: true
+          cache-dependency-path: "**/*.sum"
+
+      - uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN }}
+
+      - name: Test Jfrog CLI connection
+        run: jf rt ping
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      - name: Setup SSH key
+        run: |
+          mkdir ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$STARBASE_SSH_KEY_PRIVATE_BASE64" | base64 --decode - > ~/.ssh/starbase_private_key
+          chmod 600 ~/.ssh/starbase_private_key
+          echo "IdentityFile ~/.ssh/starbase_private_key" > ~/.ssh/config
+          echo "StrictHostKeyChecking accept-new" >> ~/.ssh/config
+        env:
+          STARBASE_SSH_KEY_PRIVATE_BASE64: "${{ secrets.STARBASE_SSH_KEY_PRIVATE_BASE64 }}"
+      
+      - name: Download artifact from staging
+        run: task jfrog.download
+        env:
+          JFROG_DOWNLOAD_VERSION: ${{ github.event.inputs.version }}
+          JFROG_DOWNLOAD_DIR: download/
+
+      - name: Get path of downloaded artifact
+        id: get_artifact_path
+        run: echo "debian_path=$(find ./download -type f -name '*.deb' | head -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Run e2e test
+        run: task test.e2e
+        env:
+          GUEST_AGENT_DEBIAN_PATH: "../${{ steps.get_artifact_path.outputs.debian_path }}"
+          GUEST_AGENT_EXPECTED_VERSION: ${{ github.event.inputs.version }}

@@ -1,0 +1,81 @@
+name: Create new Git tag
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  tag_and_push:
+    runs-on: lambda-ubuntu-latest
+    outputs:
+      tag_exit_code: ${{ steps.tag.outputs.exitcode }}
+    steps:
+      - run: sudo apt update && sudo apt install -y git && git --version
+      - uses: actions/checkout@v2
+        with:
+          # We need entire history of tags
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./tools/go.mod
+          check-latest: true
+          cache-dependency-path: "**/*.sum"
+
+      - name: Download Go dependencies
+        run: cd tools/ && go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
+
+      - name: Run tagging commands
+        id: tag
+        run: |
+          set +e
+          task -x tag
+          exitcode="$?"
+          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+          # The range between 8 and 63 inclusive is reserved for custom
+          # error codes that contain specific meaning.
+          if [ $exitcode -lt 8 -o $exitcode -gt 63 ]; then
+            exit $exitcode
+          fi
+          exit 0
+      - name: Push tags
+        run: task tag.push
+        if: steps.tag.outputs.exitcode == 0
+
+  release_staging:
+    runs-on: lambda-ubuntu-latest
+    needs: tag_and_push
+    # Return code of 0 is returned only if a new tag was truly
+    # pushed. Otherwise there is nothing to release.
+    if: needs.tag_and_push.outputs.tag_exit_code == 0
+    steps:
+      - run: sudo apt update && sudo apt install -y git make && git --version
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./tools/go.mod
+          check-latest: true
+          cache-dependency-path: "**/*.sum"
+
+      - name: Download Go dependencies
+        run: cd tools/ && go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
+
+      - uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN }}
+
+      - name: Test Jfrog CLI connection
+        run: jf rt ping
+
+      - name: Build and Release
+        run: task release.staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

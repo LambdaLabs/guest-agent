@@ -1,0 +1,70 @@
+version: 1
+project_name: lambda-guest-agent
+
+builds:
+  - id: guest-agent
+    main: ./
+    goos:
+    - linux
+    goarch:
+    - amd64
+
+nfpms:
+  - id: guest-agent
+    package_name: lambda-guest-agent
+    vendor: Lambda Labs
+    homepage: https://github.com/lambdal/guest-agent
+    maintainer: Landon Clipp <landon@lambdal.com>
+    description: Description
+    formats: [deb]
+    contents:
+    - src: ../build/files/etc/lambda/guest-agent/
+      dst: /etc/lambda/guest-agent/
+      type: tree
+    - src: ../build/files/usr/local/bin/lambda/
+      dst: /usr/local/bin/lambda/
+      type: tree
+    scripts:
+      preinstall: "../build/files/scripts/preinstall.sh"
+      postinstall: "../build/files/scripts/postinstall.sh"
+      preremove: "../build/files/scripts/preremove.sh"
+      postremove: "../build/files/scripts/postremove.sh"
+
+archives:
+  - id: guest-agent
+    format: tar.gz
+    builds: [default]
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        format: zip
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: lambdal
+    name: guest-agent
+  ids:
+  - default
+
+publishers:
+- name: artifactory-staging
+  cmd: >-
+    jfrog rt upload --deb stable/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/"
+  dir: "{{ dir .ArtifactPath }}"
+
+

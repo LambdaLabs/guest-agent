@@ -1,0 +1,150 @@
+version: "3"
+
+dotenv: ["guest-agent.env"]
+
+tasks:
+  mkdir:
+    requires: 
+      vars: [DIR]
+    cmds:
+      - mkdir -p {{.DIR}}
+
+  build-tools:
+    desc: Build tools directory
+    cmds:
+    - cd ./tools && go build -o tools .
+
+  tag:
+    desc: Tag the git repo with the version specified in the VERSION file.
+    deps: [build-tools]
+    cmds:
+    - ./tools/tools tag --dry-run=false
+  
+  install-deps:
+    desc: Install tool dependencies
+    dir: '{{.ROOT_DIR}}/tools'
+    cmds:
+    - cat external-tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
+  
+  tag.push:
+    desc: Push tags to origin
+    cmds:
+    - git push origin --tags
+
+  telegraf.clone:
+    desc: Clone the telegraf repo at a specific tag
+    deps:
+    - task: mkdir
+      vars:
+        DIR: ./build
+    cmds:
+      - cd ./build && rm -rf telegraf/ && git clone --depth 1 --branch {{.GUEST_AGENT_TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
+
+  build.telegraf:
+    desc: Build telegraf
+    deps:
+      - telegraf.clone
+      - build.templates
+    cmds:
+      - cd $GUEST_AGENT_TELEGRAF_BUILD_DIR && make build_tools
+      - cd $GUEST_AGENT_TELEGRAF_BUILD_DIR && ./tools/custom_builder/custom_builder --config ../../build/files/$GUEST_AGENT_TELEGRAF_CONF
+      - mkdir -p ./build/files/$GUEST_AGENT_LAMBDA_BIN_DIR
+      - mv $GUEST_AGENT_TELEGRAF_BUILD_DIR/telegraf $GUEST_AGENT_TEMPLATES_OUTDIR/$GUEST_AGENT_LAMBDA_BIN_DIR/telegraf
+    generates:
+      - ./build/files/$GUEST_AGENT_LAMBDA_BIN_DIR/telegraf
+    env:
+      GOOS: linux
+      GOARCH: amd64
+
+  build.templates:
+    desc: Render configuration templates
+    deps: [build-tools]
+    cmds:
+      - ./tools/tools render_template
+
+  build.clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf ./build
+      - rm -rf ./goreleaser/dist
+      - rm -rf ./download
+
+  build:
+    desc: Build only the binary artifacts.
+    cmds:
+      - task: build.clean
+      - task: build.telegraf
+      - cd goreleaser && goreleaser build --clean
+    requires:
+      vars:
+      - GITHUB_TOKEN
+  
+  build.snapshot:
+    desc: Build only the binary artifacts.
+    cmds:
+      - task: build.clean
+      - task: build.telegraf
+      - cd goreleaser && goreleaser build --clean --snapshot
+    requires:
+      vars:
+      - GITHUB_TOKEN
+
+  release.staging:
+    desc: Build binaries, create .deb files, and upload/release the artifacts.
+    cmds:
+    - task: build
+    - cd goreleaser/ && goreleaser release --clean
+    requires:
+      vars:
+      - GITHUB_TOKEN
+
+  release.snapshot:
+    desc: Build binaries, create .deb files. Ignore dirty git states.
+    cmds:
+    - task: build.snapshot
+    - cd goreleaser && goreleaser release --auto-snapshot --skip publish,announce --draft --clean
+
+  deb-s3.upload:
+    desc: Upload file using deb-s3 to S3 bucket
+    cmds:
+      - deb-s3 upload --gpg-options="${DEB_S3_GPG_OPTIONS}" --codename=stable --component=main --bucket=lambdalabs-guest-agent --visibility=nil --sign=${GPG_KEY_ID} {{ .FROM_DIR }}/lambda-guest-agent*.deb
+    requires:
+      vars:
+        - FROM_DIR
+        - GPG_KEY_ID
+
+  jfrog.download:
+    desc: Download a specific version of guest-agent from the Artifactory repo.
+    cmds:
+      - jf rt download guest-agent/lambda-guest-agent_{{.JFROG_DOWNLOAD_VERSION}}_linux_{{.GUEST_AGENT_ARCH | default "amd64"}}.deb {{ .DOWNLOAD_DIR  | default "download/" }}
+    requires:
+      vars:
+        - JFROG_DOWNLOAD_VERSION
+    status:
+      - test -f {{ .JFROG_DOWNLOAD_DIR | default "download/" }}/lambda-guest-agent_{{.FROG_DOWNLOAD_VERSION}}_linux_{{.GUEST_AGENT_ARCH | default "amd64"}}.deb
+
+  release.prod:
+    desc: Promote to the prod S3 repo
+    cmds:
+      - task: jfrog.download
+        vars:
+          FROG_DOWNLOAD_VERSION: "{{.GUEST_AGENT_PROMOTE_VERSION}}"
+          JFROG_DOWNLOAD_DIR: "download/"
+      - task: deb-s3.upload
+        vars:
+          FROM_DIR: download/
+      - aws s3 cp ./files/scripts/install.sh s3://lambdalabs-guest-agent/scripts/install.sh
+      - aws s3 cp ./files/keys/lambdalabs-guest-agent.pub.gpg s3://lambdalabs-guest-agent/keys/lambdalabs-guest-agent.pub.gpg
+    requires:
+      vars:
+        - GUEST_AGENT_PROMOTE_VERSION
+
+  test.e2e:
+    desc: Run e2e tests on a Lambda VM
+    deps: [build-tools]
+    cmds:
+      - cd ./tools && ./tools test --debian-path {{ .GUEST_AGENT_DEBIAN_PATH }} --expected-version {{ .GUEST_AGENT_EXPECTED_VERSION }}
+    requires:
+      vars:
+        - GUEST_AGENT_EXPECTED_VERSION
+        - GUEST_AGENT_DEBIAN_PATH

@@ -1,0 +1,88 @@
+name: Promote package to prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to promote, without the leading 'v'."
+        type: string
+        required: true
+
+run-name: "Promote v${{ github.event.inputs.version }} to prod | @${{ github.actor}}"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  release-prod:
+    runs-on: lambda-ubuntu-latest
+    environment: release-prod
+    steps:
+      - uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN }}
+
+      - name: Test Jfrog CLI connection
+        run: jf rt ping
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      - name: Install various dependencies
+        run: sudo apt install -y wget curl unzip
+
+      - name: Setup deb-s3
+        run: |
+          sudo wget -O /etc/apt/trusted.gpg.d/deb-s3-archive-keyring.gpg https://raw.githubusercontent.com/deb-s3/deb-s3/master/deb-s3-archive-keyring.gpg
+          echo "deb https://deb-s3-repo.s3.us-east-2.amazonaws.com/$(lsb_release -is | tr A-Z a-z)/ $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list > /dev/null
+          sudo apt update
+          sudo apt install -y deb-s3
+          sudo gem install deb-s3
+      
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-west-2
+          role-to-assume: arn:aws:iam::921575574570:role/lambdalabs-guest-agent-github-actions
+
+      - name: Setup signing keys in GPG
+        run: |
+          gpg --version
+          gpg --batch --import <(printf "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
+          gpg --batch --import <(printf "$APT_SIGNING_KEY_PUBLIC_BASE64" | base64 --decode)
+          gpg --list-keys
+
+        env:
+          APT_SIGNING_KEY_PRIVATE_BASE64: ${{ secrets.APT_SIGNING_KEY_PRIVATE_BASE64 }}
+          APT_SIGNING_KEY_PUBLIC_BASE64: ${{ secrets.APT_SIGNING_KEY_PUBLIC_BASE64 }}
+
+      - name: Install aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      #- name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
+
+      - name: Release prod
+        run: |
+          task release.prod
+        env:
+          GUEST_AGENT_PROMOTE_VERSION: ${{ github.event.inputs.version }}
+          GPG_KEY_ID: 891A94BE192FD853
+          # Don't you dare use the --passphrase option on your local computer. This is only
+          # fine on Github Actions because it's a single-user system and secrets are
+          # scrubbed from logs.
+          #
+          # Note: https://github.com/deb-s3/deb-s3/issues/34
+          DEB_S3_GPG_OPTIONS: \-\-pinentry-mode=loopback \-\-no-tty \-\-batch \-\-yes \-\-passphrase "${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}"
+          APT_SIGNING_KEY_PASSPHRASE: ${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}

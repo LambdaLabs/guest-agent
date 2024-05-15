@@ -1,0 +1,13 @@
+[Unit]
+Description=Lambda metrics and observability agent updater
+After=network.target
+
+[Service]
+ExecStart=/bin/bash {{ .GuestAgentLambdaBinDir }}/guest-agent-update.sh
+Type=oneshot
+RemainAfterExit=true
+Restart=on-failure
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

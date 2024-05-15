@@ -1,0 +1,12 @@
+[Unit]
+Description=Lambda metrics and observability agent updater
+Requires={{.GuestAgentUpdaterServiceName}}
+
+[Timer]
+Unit={{.GuestAgentUpdaterServiceName}}
+OnCalendar=*-*-01,15 14:00:00
+FixedRandomDelay=true
+RandomizedDelaySec=1209600
+
+[Install]
+WantedBy=timers.target
