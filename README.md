@@ -47,7 +47,7 @@ Different tasks need different environment variables, please refer to the output
 
 ## Tasks
 
-[Task](https://taskfile.dev/) is used instead of Makefile. Why? Task is just better :D 
+[Task](https://taskfile.dev/) is used instead of Makefile. Why? Task is just better. Trust me, you will see :D 
 
 ```
 $ task --list
