@@ -120,3 +120,64 @@ The `release` command will build the artifacts and create `.deb` files. The `rel
 ### `release`
 
 This command is the full, end-to-end build-publish-release flow for uploading `.deb` files. This requires the Git state to be clean, meaning that `HEAD` is on a tagged version.
+
+```
+$ task release             
+task: [release] goreleaser release --clean
+  • starting release...
+  • loading                                          path=.goreleaser.yaml
+  • loading environment variables
+    • using token from  $GITHUB_TOKEN 
+  • getting and validating git state
+    • git state                                      commit=d3d9a98a9477b6e4971ed4f9d7ede65f0d4a67dd branch=main current_tag=v0.0.22 previous_tag=v0.0.21 dirty=false
+    • took: 1s
+  • parsing tag
+  • setting defaults
+  • checking distribution directory
+    • cleaning dist
+  • setting up metadata
+  • storing release metadata
+    • writing                                        file=dist/metadata.json
+  • loading go mod information
+  • build prerequisites
+  • writing effective config file
+    • writing                                        config=dist/config.yaml
+  • building binaries
+    • building                                       binary=dist/default_linux_amd64_v1/lambda-support
+    • building                                       binary=dist/default_linux_arm64/lambda-support
+    • took: 4s
+  • generating changelog
+    • writing                                        changelog=dist/CHANGELOG.md
+  • archives
+    • creating                                       archive=dist/lambda-metrics-stack_Linux_arm64.tar.gz
+    • creating                                       archive=dist/lambda-metrics-stack_Linux_x86_64.tar.gz
+  • linux packages
+    • creating                                       package=lambda-metrics-stack format=deb arch=arm64 file=dist/lambda-metrics-stack_0.0.22_linux_arm64.deb
+    • creating                                       package=lambda-metrics-stack format=deb arch=amd64v1 file=dist/lambda-metrics-stack_0.0.22_linux_amd64.deb
+  • calculating checksums
+  • publishing
+    • artifactory
+      • uploaded successful                          instance=staging mode=archive
+      • uploaded successful                          instance=staging mode=archive
+      • took: 2s
+    • scm releases
+      • creating or updating release                 tag=v0.0.22 repo=lambdal/metrics-stack
+      • refreshing checksums                         file=lambda-metrics-stack_0.0.22_checksums.txt
+      • release created                              name=v0.0.22 release-id=156128163 request-id=F6CF:191818:399D9FD:6401CC0:66463DA4
+      • uploading to release                         file=dist/lambda-metrics-stack_0.0.22_checksums.txt name=lambda-metrics-stack_0.0.22_checksums.txt
+      • uploading to release                         file=dist/lambda-metrics-stack_0.0.22_linux_amd64.deb name=lambda-metrics-stack_0.0.22_linux_amd64.deb
+      • uploading to release                         file=dist/lambda-metrics-stack_Linux_arm64.tar.gz name=lambda-metrics-stack_Linux_arm64.tar.gz
+      • uploading to release                         file=dist/lambda-metrics-stack_Linux_x86_64.tar.gz name=lambda-metrics-stack_Linux_x86_64.tar.gz
+      • uploading to release                         file=dist/lambda-metrics-stack_0.0.22_linux_arm64.deb name=lambda-metrics-stack_0.0.22_linux_arm64.deb
+      • release updated                              name= release-id=156128163 request-id=F6CF:191818:399E516:6402F4A:66463DA6
+      • release created/updated                      url=https://github.com/lambdal/metrics-stack/releases/tag/v0.0.22 published=true
+      • took: 3s
+  • took: 5s
+  • storing artifacts metadata
+    • writing                                        file=dist/artifacts.json
+  • announcing
+  • release succeeded after 9s
+  • thanks for using goreleaser!
+```
+
+You will then see the uploaded artifacts on the [Github Releases page](https://github.com/lambdal/metrics-stack/releases) and on Artifactory.
