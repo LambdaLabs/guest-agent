@@ -2,25 +2,34 @@ version: "3"
 
 
 
-dotenv: ["env.sh"]
+dotenv: [".env"]
 
 tasks:
+  tag:
+    desc: Tag the git repo with the version specified in the VERSION file.
+    cmds:
+    - git tag {{ .VERSION }}
+    - git push origin {{ .VERSION }}
+    vars:
+      VERSION:
+        sh: cat VERSION | head -n 1 | tr -d '\n'
+
   build.snapshot:
-    desc: Build locally and ignore a dirty git state.
+    desc: Build only the binary artifacts. Ignore dirty git states.
     cmds:
       - goreleaser build --clean --snapshot
     requires:
       vars:
       - GITHUB_TOKEN
   build:
-    desc: Build locally, but fail if git state is dirty.
+    desc: Build only the binary artifacts. Ignore dirty git states.
     cmds:
     - goreleaser build --clean
     requires:
       vars:
       - GITHUB_TOKEN
   release:
-    desc: Build and submit a new release.
+    desc: Build binaries, create .deb files, and upload/release the artifacts.
     cmds:
     - goreleaser release --clean
     requires:
@@ -28,7 +37,7 @@ tasks:
       - ARTIFACTORY_STAGING_SECRET
       - GITHUB_TOKEN
   release.snapshot:
-    desc: Build and submit a new release, but ignore dirty git state.
+    desc: Build binaries, create .deb files. Ignore dirty git states.
     cmds:
     - goreleaser release --snapshot --clean
     requires:
