@@ -1,8 +1,8 @@
 version: "3"
 
-env:
-  ARTIFACTORY_STAGING_SECRET: "{{ .ARTIFACTORY_STAGING_SECRET }}"
-  GITHUB_TOKEN: "{{ .GITHUB_TOKEN }}"
+
+
+dotenv: ["env.sh"]
 
 tasks:
   build.snapshot:
