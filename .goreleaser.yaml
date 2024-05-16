@@ -67,3 +67,4 @@ artifactories:
     target: "https://artifactory.platform.lambdastaging.com/artifactory/guest-agent"
     exts: [deb]
     username: landon-temp
+    checksum: true
