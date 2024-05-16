@@ -1,19 +1,36 @@
 version: "3"
 
+env:
+  ARTIFACTORY_STAGING_SECRET: "{{ .ARTIFACTORY_STAGING_SECRET }}"
+  GITHUB_TOKEN: "{{ .GITHUB_TOKEN }}"
+
 tasks:
   build.snapshot:
     desc: Build locally and ignore a dirty git state.
     cmds:
       - goreleaser build --clean --snapshot
+    requires:
+      vars:
+      - GITHUB_TOKEN
   build:
     desc: Build locally, but fail if git state is dirty.
     cmds:
     - goreleaser build --clean
+    requires:
+      vars:
+      - GITHUB_TOKEN
   release:
     desc: Build and submit a new release.
     cmds:
     - goreleaser release --clean
+    requires:
+      vars:
+      - ARTIFACTORY_STAGING_SECRET
+      - GITHUB_TOKEN
   release.snapshot:
     desc: Build and submit a new release, but ignore dirty git state.
     cmds:
     - goreleaser release --snapshot --clean
+    requires:
+      vars:
+      - GITHUB_TOKEN
