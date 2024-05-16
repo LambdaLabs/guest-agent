@@ -70,3 +70,4 @@ artifactories:
   - name: staging
     target: "https://artifactory.platform.lambdastaging.com/artifactory/guest-agent/{{ .ProjectName }}/{{ .Version }}/{{ .Os }}/{{ .Arch }}{{ if .Arm }}{{ .Arm }}{{ end }}"
     exts: [deb]
+    username: landon-temp
