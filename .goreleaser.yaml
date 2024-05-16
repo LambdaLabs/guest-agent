@@ -65,3 +65,8 @@ release:
 
 env_files:
   github_token: /Users/landon/.github/tokens/lambda-metrics-stack-test
+
+artifactories:
+  - name: staging
+    target: "http://artifacts.company.com:8081/artifactory/example-repo-local/{{ .ProjectName }}/{{ .Version }}/{{ .Os }}/{{ .Arch }}{{ if .Arm }}{{ .Arm }}{{ end }}"
+    exts: [deb]
