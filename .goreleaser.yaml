@@ -68,5 +68,5 @@ env_files:
 
 artifactories:
   - name: staging
-    target: "http://artifacts.company.com:8081/artifactory/example-repo-local/{{ .ProjectName }}/{{ .Version }}/{{ .Os }}/{{ .Arch }}{{ if .Arm }}{{ .Arm }}{{ end }}"
+    target: "https://artifactory.platform.lambdastaging.com/artifactory/guest-agent/{{ .ProjectName }}/{{ .Version }}/{{ .Os }}/{{ .Arch }}{{ if .Arm }}{{ .Arm }}{{ end }}"
     exts: [deb]
