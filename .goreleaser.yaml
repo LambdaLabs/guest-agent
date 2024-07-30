@@ -1,5 +1,5 @@
 version: 1
-project_name: lambda-metrics-stack
+project_name: lambda-guest-agent
 
 builds:
   - id: default
@@ -13,18 +13,18 @@ builds:
 
 nfpms:
   - id: default
-    package_name: lambda-metrics-stack
+    package_name: lambda-guest-agent
     vendor: Lambda Labs
-    homepage: https://github.com/lambdal/metrics-stack
+    homepage: https://github.com/lambdal/guest-agent
     maintainer: Landon Clipp <landon@lambdal.com>
     description: Description
     formats: [deb]
     dependencies:
     - telegraf
-    - lambda-metrics-stack
+    - lambda-guest-agent
     contents:
-    - src: files/etc/lambda/metrics-stack
-      dst: /etc/lambda/metrics-stack
+    - src: files/etc/lambda/guest-agent
+      dst: /etc/lambda/guest-agent
       type: tree
     scripts:
       preinstall: "scripts/preinstall.sh"
@@ -58,7 +58,7 @@ changelog:
 release:
   github:
     owner: lambdal
-    name: metrics-stack
+    name: guest-agent
   ids:
   - default
 

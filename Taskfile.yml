@@ -22,7 +22,7 @@ tasks:
       vars:
       - GITHUB_TOKEN
   build:
-    desc: Build only the binary artifacts. Ignore dirty git states.
+    desc: Build only the binary artifacts.
     cmds:
     - goreleaser build --clean
     requires:
