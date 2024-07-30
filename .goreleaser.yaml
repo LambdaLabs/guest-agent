@@ -4,7 +4,7 @@ project_name: lambda-guest-agent
 builds:
   - id: default
     main: ./
-    binary: lambda-support
+    binary: lambda-guest-agent
     goos:
     - linux
     goarch:
@@ -54,7 +54,6 @@ changelog:
       - "^docs:"
       - "^test:"
 
-
 release:
   github:
     owner: lambdal
@@ -62,9 +61,9 @@ release:
   ids:
   - default
 
-artifactories:
-  - name: staging
-    target: "https://artifactory.platform.lambdastaging.com/artifactory/guest-agent"
-    exts: [deb]
-    username: landon-temp
-    checksum: true
+publishers:
+- name: artifactory-staging
+  cmd: >-
+    jfrog rt upload --deb focal/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/{{ .Version }}/"
+  dir: "{{ dir .ArtifactPath }}"
+
