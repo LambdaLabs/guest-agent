@@ -64,8 +64,7 @@ release:
 publishers:
 - name: artifactory-staging
   cmd: >-
-    jfrog rt upload --url https://artifactory.aws.lambdalabs.cloud/artifactory/ --user landon@lambdal.com --access-token $ARTIFACTORY_SECRET --deb focal/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/"
+    jfrog rt upload --deb focal/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/"
   dir: "{{ dir .ArtifactPath }}"
-  env:
-  - ARTIFACTORY_SECRET={{ .Env.ARTIFACTORY_SECRET }}
+
 
