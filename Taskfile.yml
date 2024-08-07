@@ -34,6 +34,9 @@ tasks:
       - cd /tmp/telegraf && make build
     generates:
       - /tmp/telegraf/telegraf
+    env:
+      GOOS: linux
+      GOARCH: amd64
 
   telegraf:
     desc: Copy telegraf artifact
