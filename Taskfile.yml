@@ -14,6 +14,33 @@ tasks:
       VERSION:
         sh: cat VERSION | head -n 1 | tr -d '\n'
 
+  telegraf.clone:
+    desc: Clone the telegraf repo at a specific tag
+    cmds:
+      - cd /tmp && rm -rf telegraf && git clone --depth 1 --branch {{.TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
+    status:
+      - test -d /tmp/telegraf/
+    sources:
+      - ./TELEGRAF_VERSION
+    vars:
+      TELEGRAF_VERSION:
+        sh: head -n 1 ./TELEGRAF_VERSION | tr -d '\n'
+
+  telegraf.build:
+    desc: Build telegraf
+    deps:
+      - telegraf.clone
+    cmds:
+      - cd /tmp/telegraf && make build
+    generates:
+      - /tmp/telegraf/telegraf
+
+  telegraf:
+    desc: Copy telegraf artifact
+    deps: [telegraf.build]
+    cmds:
+    - cp /tmp/telegraf/telegraf ./files/usr/bin/lambda/
+
   build.snapshot:
     desc: Build only the binary artifacts. Ignore dirty git states.
     cmds:
@@ -30,6 +57,7 @@ tasks:
       - GITHUB_TOKEN
   release:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
+    deps: [telegraf]
     cmds:
     - goreleaser release --clean
     requires:
