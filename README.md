@@ -8,6 +8,7 @@
     - [`build`/`build.snapshot`](#buildbuildsnapshot)
     - [`release.snapshot`](#releasesnapshot)
     - [`release`](#release)
+  - [Configuring apt for artifactory:](#configuring-apt-for-artifactory)
 
 
 This repo contains the lambda-metrics-stack that will be installed on Guest VMs. Inside are configuration files, tools, scripts, and other CI/CD bits to generate `.deb` packages that will be uploaded to Artifactory.
@@ -184,3 +185,34 @@ You will then see the uploaded artifacts on the [Github Releases page](https://g
 
 ## Configuring apt for artifactory:
 
+```
+$ echo 'deb https://artifactory.aws.lambdalabs.cloud:443/artifactory/guest-agent/ focal main' > /etc/apt/sources.list.d/artifactory.list`
+$ gpg --import <(curl --insecure https://artifactory.aws.lambdalabs.cloud/artifactory/api/security/keypair/Lambda-Cloud-Repo
+sitory-Key/public)
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  3150    0  3150    0     0  18545      0 --:--:-- --:--:-- --:--:-- 18639
+gpg: /home/landon.linux/.gnupg/trustdb.gpg: trustdb created
+gpg: key 13E7ABF1670B360E: public key "Lambda Cloud Repository Key <cloud@lambdal.com>" imported
+gpg: Total number processed: 1
+$ gpg --export 13E7ABF1670B360E | sudo tee /etc/apt/trusted.gpg.d/artifactory-prod.gpg >/dev/null
+$ sudo apt-get update
+```
+
+You may encounter an error message like this:
+
+```
+W: Failed to fetch https://artifactory.aws.lambdalabs.cloud:443/artifactory/guest-agent/dists/focal/InRelease  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 100.102.240.2 443]
+```
+
+If so, you need to setup the internal Lambda CA Certificate: https://effective-adventure-kg1ng65.pages.github.io/starbase/dev/#set-up-the-lambda-certificate-authority
+
+If successful, you should see `lambda-guest-agent`:
+
+```
+$ apt search lambda-guest-agent
+Sorting... Done
+Full Text Search... Done
+lambda-guest-agent/focal 0.0.31 arm64
+  Description
+```

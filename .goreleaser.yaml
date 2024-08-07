@@ -26,6 +26,9 @@ nfpms:
     - src: files/etc/lambda/guest-agent
       dst: /etc/lambda/guest-agent
       type: tree
+    - src: files/etc/systemd/system
+      dst: /etc/systemd/system
+      type: tree
     scripts:
       preinstall: "scripts/preinstall.sh"
       postinstall: "scripts/postinstall.sh"
