@@ -34,7 +34,7 @@ tasks:
     - goreleaser release --clean
     requires:
       vars:
-      - ARTIFACTORY_STAGING_SECRET
+      - ARTIFACTORY_SECRET
       - GITHUB_TOKEN
   release.snapshot:
     desc: Build binaries, create .deb files. Ignore dirty git states.

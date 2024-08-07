@@ -181,3 +181,6 @@ task: [release] goreleaser release --clean
 ```
 
 You will then see the uploaded artifacts on the [Github Releases page](https://github.com/lambdal/metrics-stack/releases) and on Artifactory.
+
+## Configuring apt for artifactory:
+
