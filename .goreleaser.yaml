@@ -22,8 +22,8 @@ nfpms:
     dependencies:
     - telegraf
     contents:
-    - src: files/etc/lambda/guest-agent
-      dst: /etc/lambda/guest-agent
+    - src: files/etc/lambda/guest-agent/telegraf.conf.d
+      dst: /etc/lambda/guest-agent/telegraf.conf.d
       type: tree
     - src: files/etc/lambda/guest-agent/systemd
       dst: /etc/lambda/guest-agent/systemd
