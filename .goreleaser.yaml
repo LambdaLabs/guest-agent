@@ -21,13 +21,12 @@ nfpms:
     formats: [deb]
     dependencies:
     - telegraf
-    - lambda-guest-agent
     contents:
     - src: files/etc/lambda/guest-agent
       dst: /etc/lambda/guest-agent
       type: tree
-    - src: files/etc/systemd/system
-      dst: /etc/systemd/system
+    - src: files/etc/systemd/system/lambda-guest-agent.service.d
+      dst: /etc/systemd/system/lambda-guest-agent.service.d
       type: tree
     scripts:
       preinstall: "scripts/preinstall.sh"

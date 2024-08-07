@@ -3,7 +3,7 @@ Description=Lambda metrics and observability agent
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/telegraf -config /etc/lambda/metrics-stack/telegraf.conf -config-directory /etc/lambda/metrics-stack/telegraf.directory
+ExecStart=/usr/bin/telegraf -config /etc/lambda/guest-agent/telegraf.conf -config-directory /etc/lambda/guest-agent/telegraf.conf.d
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartForceExitStatus=SIGPIPE
