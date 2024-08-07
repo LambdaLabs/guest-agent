@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf /etc/systemd/system/lambda-guest-agent.service.d/
+rm -rf /etc/lambda/guest-agent/systemd/
 systemctl stop telegraf
 systemctl disable telegraf
 echo "ran preinstall"
