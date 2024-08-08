@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/lambdal/guest-agent/cmd"
+)
 
 func main() {
-	fmt.Println("hello world")
+	if err := cmd.NewRootCmd().Execute(); err != nil {
+		os.Exit(1)
+	}
 }

@@ -22,18 +22,12 @@ nfpms:
     dependencies:
     - telegraf
     contents:
-    - src: files/etc/lambda/guest-agent/telegraf.conf.d
-      dst: /etc/lambda/guest-agent/telegraf.conf.d
-      type: tree
-    - src: files/etc/lambda/guest-agent/systemd
-      dst: /etc/lambda/guest-agent/systemd
-      type: tree
-    - src: files/usr/bin/lambda
-      dst: /usr/bin/lambda
+    - src: build/files/etc/lambda/guest-agent/
+      dst: /etc/lambda/guest-agent/
       type: tree
     scripts:
-      preinstall: "scripts/preinstall.sh"
-      postinstall: "scripts/postinstall.sh"
+      preinstall: "build/files/scripts/preinstall.sh"
+      postinstall: "build/files/scripts/postinstall.sh"
 
 archives:
   - id: default

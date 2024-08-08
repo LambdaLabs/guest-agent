@@ -25,3 +25,5 @@ dist/
 .env
 .task/
 files/usr/bin/lambda/telegraf
+build/
+guest-agent

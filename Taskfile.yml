@@ -2,9 +2,19 @@ version: "3"
 
 
 
-dotenv: [".env"]
+dotenv: ["guest-agent.env"]
 
 tasks:
+  mkdir:
+    requires: 
+      vars: [DIR]
+    cmds:
+      - mkdir -p {{.DIR}}
+    generates:
+      - "{{.DIR}}"
+    status:
+      - test -d {{.DIR}}
+
   tag:
     desc: Tag the git repo with the version specified in the VERSION file.
     cmds:
@@ -16,61 +26,80 @@ tasks:
 
   telegraf.clone:
     desc: Clone the telegraf repo at a specific tag
+    deps:
+    - task: mkdir
+      vars:
+        DIR: ./build
     cmds:
-      - cd /tmp && rm -rf telegraf && git clone --depth 1 --branch {{.TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
+      - cd ./build && rm -rf telegraf/ && git clone --depth 1 --branch {{.TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
     status:
-      - test -d /tmp/telegraf/
+      - test -d ./build/telegraf/
     sources:
       - ./TELEGRAF_VERSION
     vars:
       TELEGRAF_VERSION:
         sh: head -n 1 ./TELEGRAF_VERSION | tr -d '\n'
 
-  telegraf.build:
+  build.telegraf:
     desc: Build telegraf
     deps:
       - telegraf.clone
     cmds:
-      - cd /tmp/telegraf && make build
+      - cd $GUEST_AGENT_TELEGRAF_BUILD_DIR && make build_tools
+      - cd $GUEST_AGENT_TELEGRAF_BUILD_DIR && ./tools/custom_builder/custom_builder --config ../../build/files/$GUEST_AGENT_TELEGRAF_CONF
+      - mkdir -p ./build/files/$GUEST_AGENT_LAMBDA_BIN_DIR
+      - mv $GUEST_AGENT_TELEGRAF_BUILD_DIR/telegraf $GUEST_AGENT_TEMPLATES_OUTDIR/$GUEST_AGENT_LAMBDA_BIN_DIR/telegraf
     generates:
-      - /tmp/telegraf/telegraf
+      - ./build/files/$GUEST_AGENT_LAMBDA_BIN_DIR/telegraf
     env:
       GOOS: linux
       GOARCH: amd64
 
-  telegraf:
-    desc: Copy telegraf artifact
-    deps: [telegraf.build]
+  build.templates:
+    desc: Render configuration templatesusr
     cmds:
-    - cp /tmp/telegraf/telegraf ./files/usr/bin/lambda/
+      - rm -rf 
+      - go run . render_template
+
+  build.clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf ./build
 
   build.snapshot:
     desc: Build only the binary artifacts. Ignore dirty git states.
     cmds:
-      - goreleaser build --clean --snapshot
+      - goreleaser build --snapshot
     requires:
       vars:
       - GITHUB_TOKEN
+
   build:
     desc: Build only the binary artifacts.
     cmds:
-    - goreleaser build --clean
+      - goreleaser build
+    deps:
+      - build.clean
+      - build.templates
+      - build.telegraf
     requires:
       vars:
       - GITHUB_TOKEN
+
   release:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     deps: [telegraf]
     cmds:
-    - goreleaser release --clean
+    - goreleaser release
     requires:
       vars:
       - ARTIFACTORY_SECRET
       - GITHUB_TOKEN
+
   release.snapshot:
     desc: Build binaries, create .deb files. Ignore dirty git states.
     cmds:
-    - goreleaser release --snapshot --clean
+    - goreleaser release --snapshot
     requires:
       vars:
       - GITHUB_TOKEN
