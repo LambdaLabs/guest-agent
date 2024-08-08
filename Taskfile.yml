@@ -10,10 +10,6 @@ tasks:
       vars: [DIR]
     cmds:
       - mkdir -p {{.DIR}}
-    generates:
-      - "{{.DIR}}"
-    status:
-      - test -d {{.DIR}}
 
   tag:
     desc: Tag the git repo with the version specified in the VERSION file.
@@ -32,10 +28,6 @@ tasks:
         DIR: ./build
     cmds:
       - cd ./build && rm -rf telegraf/ && git clone --depth 1 --branch {{.TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
-    status:
-      - test -d ./build/telegraf/
-    sources:
-      - ./TELEGRAF_VERSION
     vars:
       TELEGRAF_VERSION:
         sh: head -n 1 ./TELEGRAF_VERSION | tr -d '\n'
