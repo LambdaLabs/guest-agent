@@ -61,11 +61,10 @@ tasks:
   build:
     desc: Build only the binary artifacts.
     cmds:
+      - task: build.clean
+      - task: build.templates
+      - task: build.telegraf
       - goreleaser build
-    deps:
-      - build.clean
-      - build.templates
-      - build.telegraf
     requires:
       vars:
       - GITHUB_TOKEN
