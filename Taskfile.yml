@@ -66,14 +66,6 @@ tasks:
     cmds:
       - rm -rf ./build
 
-  build.snapshot:
-    desc: Build only the binary artifacts. Ignore dirty git states.
-    cmds:
-      - goreleaser build --snapshot
-    requires:
-      vars:
-      - GITHUB_TOKEN
-
   build:
     desc: Build only the binary artifacts.
     cmds:
@@ -88,7 +80,7 @@ tasks:
 
   release:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
-    deps: [telegraf]
+    deps: [build]
     cmds:
     - goreleaser release
     requires:
