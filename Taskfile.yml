@@ -57,6 +57,7 @@ tasks:
     desc: Clean build artifacts
     cmds:
       - rm -rf ./build
+      - rm -rf ./dist
 
   build:
     desc: Build only the binary artifacts.
