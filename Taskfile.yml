@@ -48,9 +48,8 @@ tasks:
       GOARCH: amd64
 
   build.templates:
-    desc: Render configuration templatesusr
+    desc: Render configuration templates
     cmds:
-      - rm -rf 
       - go run . render_template
 
   build.clean:
@@ -75,7 +74,7 @@ tasks:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     deps: [build]
     cmds:
-    - goreleaser release
+    - goreleaser release --clean
     requires:
       vars:
       - ARTIFACTORY_SECRET
