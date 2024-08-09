@@ -68,6 +68,8 @@ type rendererConf struct {
 	GuestAgentTelegrafConf       string `mapstructure:"guest_agent_telegraf_conf"`
 	GuestAgentUpdaterServiceName string `mapstructure:"guest_agent_updater_service_name"`
 	GuestAgentUpdaterServiceFile string `mapstructure:"guest_agent_updater_service_file"`
+	GuestAgentUpdaterTimerName   string `mapstructure:"guest_agent_updater_timer_name"`
+	GuestAgentUpdaterTimerFile   string `mapstructure:"guest_agent_updater_timer_file"`
 	TemplatesDir                 string `mapstructure:"guest_agent_templates_dir"`
 	TemplatesOutDir              string `mapstructure:"guest_agent_templates_outdir"`
 }

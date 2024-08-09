@@ -26,5 +26,5 @@ dist/
 .task/
 files/usr/bin/lambda/telegraf
 build/
-guest-agent
+/guest-agent
 *DS_Store
