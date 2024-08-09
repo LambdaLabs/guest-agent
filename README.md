@@ -9,6 +9,10 @@
     - [`release.snapshot`](#releasesnapshot)
     - [`release`](#release)
   - [Configuring apt for artifactory:](#configuring-apt-for-artifactory)
+  - [deb-s3](#deb-s3)
+    - [Importing the signing key](#importing-the-signing-key)
+    - [Upload](#upload)
+    - [Configure Apt for Download](#configure-apt-for-download)
 
 
 This repo contains the lambda-metrics-stack that will be installed on Guest VMs. Inside are configuration files, tools, scripts, and other CI/CD bits to generate `.deb` packages that will be uploaded to Artifactory.
@@ -215,4 +219,44 @@ Sorting... Done
 Full Text Search... Done
 lambda-guest-agent/focal 0.0.31 arm64
   Description
+```
+
+## deb-s3
+
+### Importing the signing key
+
+deb-s3 requires a GPG key for signing. Download the private key from 1pass: https://start.1password.com/open/i?a=SFGLMFIXVND4LFFX4XS2UR64HI&v=xjyno74nkswcqogfaym4bxurly&i=hvxhcvt7poclul5mbagzgttqg4&h=lambdalabs.1password.com
+
+Import it into GPG
+
+```
+gpg --allow-secret-key-import private.gpg
+```
+
+Also download the public key and add to GPG:
+
+```
+gpg --import public.gpg
+```
+
+### Upload 
+
+```
+$ deb-s3 upload --bucket lambdalabs-guest-agent --visibility=nil ./dist/lambda-guest-agent_0.0.45_linux_arm64.deb --sign CA708F1FBA73322E33FCB652891A94BE192FD853
+```
+
+### Configure Apt for Download
+
+After uploading to S3, you should be able to configure apt in a similar way above:
+
+```
+$ cat /etc/apt/sources.list.d/lambda-guest-agent.list 
+deb https://lambdalabs-guest-agent.s3.us-west-2.amazonaws.com stable main
+
+# Also download and import the public GPG key in binary format
+root@colima:/Users/landon/git/lambdal/guest-agent# gpg --import /tmp/public.gpg 
+gpg: key 891A94BE192FD853: public key "Landon Clipp <landon@lambdal.com>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+root@colima:/Users/landon/git/lambdal/guest-agent# gpg --export 891A94BE192FD853 | tee /etc/apt/trusted.gpg.d/lambda-guest-agent.gpg >/dev/null
 ```
