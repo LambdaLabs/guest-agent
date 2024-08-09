@@ -65,6 +65,7 @@ type rendererConf struct {
 	GuestAgentLambdaBinDir       string `mapstructure:"guest_agent_lambda_bin_dir"`
 	GuestAgentServiceName        string `mapstructure:"guest_agent_service_name"`
 	GuestAgentServiceFile        string `mapstructure:"guest_agent_service_file"`
+	GuestAgentTelegrafConf       string `mapstructure:"guest_agent_telegraf_conf"`
 	GuestAgentUpdaterServiceName string `mapstructure:"guest_agent_updater_service_name"`
 	GuestAgentUpdaterServiceFile string `mapstructure:"guest_agent_updater_service_file"`
 	TemplatesDir                 string `mapstructure:"guest_agent_templates_dir"`

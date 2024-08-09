@@ -97,6 +97,12 @@ tasks:
     desc: Promote to the prod S3 repo
     cmds:
       - task: deb-s3.upload
+  
+  release:
+    desc: RELEASE EVEYTHING!
+    cmds:
+      - task: release.staging
+      - task: release.prod
 
   e2e:
     desc: Upload everywhere!

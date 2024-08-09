@@ -3,7 +3,7 @@ Description=Lambda metrics and observability agent
 After=network.target
 
 [Service]
-ExecStart={{.GuestAgentLambdaBinDir}}/telegraf -config /etc/lambda/guest-agent/systemd/telegraf.conf -config-directory /etc/lambda/guest-agent/telegraf.conf.d
+ExecStart={{.GuestAgentLambdaBinDir}}/telegraf -config {{.GuestAgentTelegrafConf}}
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartForceExitStatus=SIGPIPE
