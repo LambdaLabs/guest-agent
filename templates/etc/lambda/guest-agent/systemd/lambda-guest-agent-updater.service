@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 ExecStart=/bin/bash {{ .GuestAgentLambdaBinDir }}/guest-agent-update.sh
-ExecReload=/bin/kill -HUP $MAINPID
+Type=oneshot
+RemainAfterExit=true
 Restart=on-failure
-RestartForceExitStatus=SIGPIPE
 KillMode=control-group
 
 [Install]
