@@ -27,3 +27,4 @@ dist/
 files/usr/bin/lambda/telegraf
 build/
 guest-agent
+*DS_Store

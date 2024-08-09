@@ -62,6 +62,7 @@ func NewRenderTemplateCmd(v *viper.Viper) (*cobra.Command, error) {
 type rendererConf struct {
 	EtcBaseDir                   string `mapstructure:"guest_agent_etc_base_dir"`
 	TelegrafConf                 string `mapstructure:"guest_agent_telegraf_conf"`
+	GuestAgentLambdaBinDir       string `mapstructure:"guest_agent_lambda_bin_dir"`
 	GuestAgentServiceName        string `mapstructure:"guest_agent_service_name"`
 	GuestAgentServiceFile        string `mapstructure:"guest_agent_service_file"`
 	GuestAgentUpdaterServiceName string `mapstructure:"guest_agent_updater_service_name"`

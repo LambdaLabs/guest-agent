@@ -3,7 +3,7 @@ Description=Lambda metrics and observability agent updater
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/apt update
+ExecStart=/bin/bash {{ .GuestAgentLambdaBinDir }}/guest-agent-update.sh
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartForceExitStatus=SIGPIPE

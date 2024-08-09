@@ -8,7 +8,6 @@ builds:
     goos:
     - linux
     goarch:
-    - arm64
     - amd64
 
 nfpms:
@@ -19,12 +18,12 @@ nfpms:
     maintainer: Landon Clipp <landon@lambdal.com>
     description: Description
     formats: [deb]
-    dependencies:
-    - telegraf
     contents:
     - src: build/files/etc/lambda/guest-agent/
       dst: /etc/lambda/guest-agent/
       type: tree
+    - src: build/files/usr/local/bin/lambda/
+      dst: /usr/local/bin/lambda/
     scripts:
       preinstall: "build/files/scripts/preinstall.sh"
       postinstall: "build/files/scripts/postinstall.sh"
