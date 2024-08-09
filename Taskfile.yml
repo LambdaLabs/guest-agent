@@ -67,7 +67,7 @@ tasks:
       vars:
       - GITHUB_TOKEN
 
-  release:
+  release.staging:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     cmds:
     - git commit -m "update"
@@ -92,12 +92,11 @@ tasks:
     desc: Upload file using deb-s3 to S3 bucket
     cmds:
       - deb-s3 upload --bucket lambdalabs-guest-agent --visibility=nil ./dist/lambda-guest-agent*.deb --sign CA708F1FBA73322E33FCB652891A94BE192FD853
-    requires:
-      vars:
-        - DEB_S3_FILE
 
-  release.promote:
+  release.prod:
     desc: Promote to the prod S3 repo
+    cmds:
+      - task: deb-s3.upload
 
   e2e:
     desc: Upload everywhere!
