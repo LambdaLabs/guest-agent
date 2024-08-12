@@ -8,9 +8,18 @@ import (
 
 	"github.com/chigopher/pathlib"
 	"github.com/go-errors/errors"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+var logger zerolog.Logger
+
+type timestampHook struct{}
+
+func (t timestampHook) Run(e *zerolog.Event, level zerolog.Level, message string) {
+	e.Timestamp()
+}
 
 func NewRootCmd() *cobra.Command {
 	v := viper.New()
@@ -21,11 +30,22 @@ func NewRootCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "guest_agent [command]",
 	}
-	subCmd, err := NewRenderTemplateCmd(v)
-	if err != nil {
-		panic(err)
+
+	logger = zerolog.New(zerolog.ConsoleWriter{
+		Out: os.Stdout,
+	}).Hook(timestampHook{})
+
+	subCommands := []func(v *viper.Viper) (*cobra.Command, error){
+		NewRenderTemplateCmd,
+		NewTagCmd,
 	}
-	cmd.AddCommand(subCmd)
+	for _, CommandFunc := range subCommands {
+		subCmd, err := CommandFunc(v)
+		if err != nil {
+			panic(err)
+		}
+		cmd.AddCommand(subCmd)
+	}
 	return cmd
 }
 
@@ -35,7 +55,7 @@ func printStack(err error) {
 	}
 	newErr, ok := err.(*errors.Error)
 	if ok {
-		fmt.Println(newErr.ErrorStack())
+		fmt.Printf("%v", newErr.ErrorStack())
 	}
 }
 
@@ -106,6 +126,9 @@ func (r *TemplateRenderer) Run() error {
 	}
 
 	err = walker.Walk(func(path *pathlib.Path, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		template := template.New(path.String())
 
 		fileBytes, err := path.ReadFile()
