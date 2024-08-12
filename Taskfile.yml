@@ -75,7 +75,6 @@ tasks:
     - goreleaser release --clean
     requires:
       vars:
-      - ARTIFACTORY_SECRET
       - GITHUB_TOKEN
 
   release.snapshot:

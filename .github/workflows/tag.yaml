@@ -69,3 +69,5 @@ jobs:
 
       - name: Build and Release
         run: go run github.com/go-task/task/v3/cmd/task release.staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
