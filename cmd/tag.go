@@ -174,6 +174,7 @@ func (t *Tagger) Tag() error {
 	}
 	if !status.IsClean() {
 		logger.Error().Msg("git is in a dirty state, can't tag.")
+		fmt.Println(status.String())
 		return errors.New("dirty git state")
 	}
 
