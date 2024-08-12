@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -25,6 +26,7 @@ func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 			tagger := NewTagger(v)
 			if err := tagger.Tag(); err != nil {
 				printStack(err)
+				os.Exit(1)
 			}
 		},
 	}

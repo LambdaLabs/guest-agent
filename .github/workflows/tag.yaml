@@ -13,18 +13,34 @@ jobs:
         with:
           # We need entire history of tags
           fetch-depth: 0
-          path: main
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
+          go-version: '1.22'
+      - id: go-cache-paths
+        run: |
+          echo "::set-output name=go-build::$(go env GOCACHE)"
+          echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+      # https://markphelps.me/posts/speed-up-your-go-builds-with-actions-cache/
+      # Cache go mod cache, used to speedup builds
+      - name: Go Mod Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+      # Cache go build cache, used to speedup go test
+      - name: Go Build Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
       - name: Download Go dependencies
         run: go mod download -x
       - name: Run tagging commands
-        run: task tag
+        run: go run github.com/go-task/task/v3/cmd/task tag
   push-tags:
     needs: tag
     runs-on: ubuntu-latest
     steps:
       - name: Push tags
-        run: task tag.push
+        run: go run github.com/go-task/task/v3/cmd/task tag.push
