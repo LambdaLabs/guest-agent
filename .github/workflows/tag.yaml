@@ -8,7 +8,7 @@ permissions:
   contents: write
 jobs:
   tag_and_push:
-    runs-on: ubuntu-latest
+    runs-on: lambda-ubuntu-latest
     outputs:
       tag_exit_code: ${{ steps.tag.outputs.exitcode }}
     steps:
@@ -42,7 +42,7 @@ jobs:
         if: ${{ steps.tag.outputs.exitcode }} == 0
 
   release_staging:
-    runs-on: ubuntu-latest
+    runs-on: lambda-ubuntu-latest
     needs: tag_and_push
     # Return code of 0 is returned only if a new tag was truly
     # pushed. Otherwise there is nothing to release.
