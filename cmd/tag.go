@@ -16,6 +16,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	ErrNoNewVersion = errors.New("no new version specified")
+)
+
+var (
+	EXIT_CODE_NO_NEW_VERSION = 8
+)
+
 func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 	if err := v.ReadInConfig(); err != nil {
 		return nil, err
@@ -25,6 +33,9 @@ func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 		Run: func(cmd *cobra.Command, args []string) {
 			tagger := NewTagger(v)
 			if err := tagger.Tag(); err != nil {
+				if errors.Is(ErrNoNewVersion, err) {
+					os.Exit(EXIT_CODE_NO_NEW_VERSION)
+				}
 				printStack(err)
 				os.Exit(1)
 			}
@@ -160,7 +171,7 @@ func (t *Tagger) Tag() error {
 	if !fileVersion.GreaterThan(taggedVersion) {
 		logger.Info().
 			Msg("VERSION is not greater than latest git tag, nothing to do.")
-		return nil
+		return ErrNoNewVersion
 	}
 
 	worktree, err := repo.Worktree()
