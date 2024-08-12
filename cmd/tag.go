@@ -177,6 +177,7 @@ func (t *Tagger) Tag() error {
 	if err := t.createTag(repo, fmt.Sprintf("v%s", fileVersion.String())); err != nil {
 		return err
 	}
+	logger.Info().Msg("created new tag. Push to origin still required.")
 
 	return nil
 
