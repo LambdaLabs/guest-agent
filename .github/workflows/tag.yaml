@@ -41,7 +41,7 @@ jobs:
         run: go run github.com/go-task/task/v3/cmd/task tag.push
         if: ${{ steps.tag.outputs.exitcode }} == 0
 
-  release.staging:
+  release_staging:
     runs-on: ubuntu-latest
     needs: tag_and_push
     # Return code of 0 is returned only if a new tag was truly
