@@ -17,19 +17,26 @@ jobs:
         with:
           # We need entire history of tags
           fetch-depth: 0
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
           check-latest: true
           cache-dependency-path: "**/*.sum"
+
       - name: Download Go dependencies
-        run: go mod download
+        run: 
+          - go run github.com/go-task/task/v3/cmd/task install-deps
+          - echo "~/go/bin" >> $GITHUB_PATH
+
+      - name: Build guest-agent CI/CD helper
+        run: go build .
 
       - name: Run tagging commands
         id: tag
         run: |
-          go run github.com/go-task/task/v3/cmd/task tag
+          task tag
           exitcode="$?"
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           # The range between 8 and 63 inclusive is reserved for custom
@@ -39,7 +46,7 @@ jobs:
           fi
           exit 0
       - name: Push tags
-        run: go run github.com/go-task/task/v3/cmd/task tag.push
+        run: task tag.push
         if: ${{ steps.tag.outputs.exitcode }} == 0
 
   release_staging:
@@ -53,12 +60,18 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
           check-latest: true
           cache-dependency-path: "**/*.sum"
+
+      - name: Download Go dependencies
+        run: 
+          - go run github.com/go-task/task/v3/cmd/task install-deps
+          - echo "~/go/bin" >> $GITHUB_PATH
 
       - uses: jfrog/setup-jfrog-cli@v4
         env:
@@ -69,6 +82,6 @@ jobs:
         run: jf rt ping
 
       - name: Build and Release
-        run: go run github.com/go-task/task/v3/cmd/task release.staging
+        run: task release.staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

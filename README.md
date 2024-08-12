@@ -36,7 +36,8 @@ brew install go
 Then, download all dependencies with:
 
 ```
-go mod download -x
+$ go mod download -x
+$ go run github.com/go-task/task/v3/cmd/task install-deps
 ```
 
 ### Environment Variables
