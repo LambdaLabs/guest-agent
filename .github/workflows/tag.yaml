@@ -49,6 +49,7 @@ jobs:
     # pushed. Otherwise there is nothing to release.
     if: needs.tag_and_push.outputs.tag_exit_code == 0
     steps:
+      - run: sudo apt update && sudo apt install -y git && git --version
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
