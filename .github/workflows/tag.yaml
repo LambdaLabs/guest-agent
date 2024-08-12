@@ -29,7 +29,7 @@ jobs:
         run: go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
 
       - name: Build guest-agent CI/CD helper
-        run: go build .
+        run: go build ./tools
 
       - name: Run tagging commands
         id: tag
