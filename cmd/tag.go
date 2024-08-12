@@ -57,6 +57,7 @@ func (t *Tagger) createTag(repo *git.Repository, version string) error {
 	if err != nil {
 		return errors.New(err)
 	}
+	logger.Info().Str("tag", version).Msg("tag successfully created")
 	return nil
 }
 
