@@ -17,7 +17,7 @@ tasks:
   install-deps:
     desc: Install tool dependencies
     cmds:
-    - cat tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
+    - cat tools/tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
   
   tag.push:
     desc: Push tags to origin
