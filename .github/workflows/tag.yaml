@@ -1,0 +1,30 @@
+name: Create new Git tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # We need entire history of tags
+          fetch-depth: 0
+          path: main
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Download Go dependencies
+        run: go mod download -x
+      - name: Run tagging commands
+        run: task tag
+  push-tags:
+    needs: tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push tags
+        run: task tag.push

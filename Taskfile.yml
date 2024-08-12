@@ -12,11 +12,12 @@ tasks:
   tag:
     desc: Tag the git repo with the version specified in the VERSION file.
     cmds:
-    - git tag {{ .VERSION }}
-    - git push origin {{ .VERSION }}
-    vars:
-      VERSION:
-        sh: cat VERSION | head -n 1 | tr -d '\n'
+    - go run . tag --dry-run=false
+  
+  tag.push:
+    desc: Push tags to origin
+    cmds:
+    - git push origin --tags
 
   telegraf.clone:
     desc: Clone the telegraf repo at a specific tag
