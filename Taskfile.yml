@@ -40,6 +40,7 @@ tasks:
     desc: Build telegraf
     deps:
       - telegraf.clone
+      - build.templates
     cmds:
       - cd $GUEST_AGENT_TELEGRAF_BUILD_DIR && make build_tools
       - cd $GUEST_AGENT_TELEGRAF_BUILD_DIR && ./tools/custom_builder/custom_builder --config ../../build/files/$GUEST_AGENT_TELEGRAF_CONF
@@ -66,7 +67,6 @@ tasks:
     desc: Build only the binary artifacts.
     cmds:
       - task: build.clean
-      - task: build.templates
       - task: build.telegraf
       - goreleaser build
     requires:
