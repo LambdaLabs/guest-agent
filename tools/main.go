@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/lambdal/guest-agent/cmd"
+	"github.com/lambdal/guest-agent/tools/cmd"
 )
 
 func main() {

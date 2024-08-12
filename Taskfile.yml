@@ -12,7 +12,7 @@ tasks:
   tag:
     desc: Tag the git repo with the version specified in the VERSION file.
     cmds:
-    - go run . tag --dry-run=false
+    - go run ./tools tag --dry-run=false
   
   install-deps:
     desc: Install tool dependencies
@@ -54,7 +54,7 @@ tasks:
   build.templates:
     desc: Render configuration templates
     cmds:
-      - go run . render_template
+      - go run ./tools render_template
 
   build.clean:
     desc: Clean build artifacts
