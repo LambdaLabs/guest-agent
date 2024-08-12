@@ -35,7 +35,7 @@ jobs:
           path: ${{ steps.go-cache-paths.outputs.go-build }}
           key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
       - name: Download Go dependencies
-        run: go mod download -x
+        run: go mod download
       - name: Run tagging commands
         run: go run github.com/go-task/task/v3/cmd/task tag
   push-tags:
