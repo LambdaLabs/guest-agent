@@ -12,6 +12,7 @@ jobs:
     outputs:
       tag_exit_code: ${{ steps.tag.outputs.exitcode }}
     steps:
+      - run: git --version
       - uses: actions/checkout@v2
         with:
           # We need entire history of tags
