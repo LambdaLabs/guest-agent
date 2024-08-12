@@ -71,9 +71,6 @@ tasks:
   release.staging:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     cmds:
-    - git commit -m "update"
-    - git push
-    - task: tag
     - task: build
     - goreleaser release --clean
     requires:

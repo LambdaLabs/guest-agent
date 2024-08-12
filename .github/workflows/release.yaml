@@ -1,0 +1,33 @@
+name: Build and release artifacts to staging
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release.staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./go.mod
+          check-latest: true
+          cache-dependency-path: "**/*.sum"
+
+      - uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN }}
+      - name: Test Jfrog CLI connection
+        run: jf rt ping
+
+      - name: Build and Release
+        run: go run github.com/go-task/task/v3/cmd/task release.staging

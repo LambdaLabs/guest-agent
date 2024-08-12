@@ -26,4 +26,3 @@ jobs:
         run: go run github.com/go-task/task/v3/cmd/task tag
       - name: Push tags
         run: go run github.com/go-task/task/v3/cmd/task tag.push
-
