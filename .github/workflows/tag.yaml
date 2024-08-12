@@ -29,7 +29,6 @@ jobs:
       - name: Run tagging commands
         id: tag
         run: |
-          set +e
           go run github.com/go-task/task/v3/cmd/task tag
           exitcode="$?"
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
@@ -38,6 +37,7 @@ jobs:
           if [ $exitcode -lt 8 -o $exitcode -gt 63 ]; then
             exit $exitcode
           fi
+          exit 0
       - name: Push tags
         run: go run github.com/go-task/task/v3/cmd/task tag.push
         if: ${{ steps.tag.outputs.exitcode }} == 0
