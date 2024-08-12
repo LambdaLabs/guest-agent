@@ -23,9 +23,6 @@ jobs:
         run: go mod download
       - name: Run tagging commands
         run: go run github.com/go-task/task/v3/cmd/task tag
-  push-tags:
-    needs: tag
-    runs-on: ubuntu-latest
-    steps:
       - name: Push tags
         run: go run github.com/go-task/task/v3/cmd/task tag.push
+
