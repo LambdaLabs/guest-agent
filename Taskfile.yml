@@ -76,7 +76,7 @@ tasks:
     cmds:
       - task: build.clean
       - task: build.telegraf
-      - cd goreleaser && goreleaser build
+      - cd goreleaser && goreleaser build --clean
     requires:
       vars:
       - GITHUB_TOKEN
@@ -85,7 +85,7 @@ tasks:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     cmds:
     - task: build
-    - cd goreleaser/ && goreleaser release --clean
+    - cd goreleaser/ && goreleaser release
     requires:
       vars:
       - GITHUB_TOKEN
