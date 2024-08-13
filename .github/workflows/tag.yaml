@@ -43,7 +43,7 @@ jobs:
           exit 0
       - name: Push tags
         run: task tag.push
-        if: ${{ steps.tag.outputs.exitcode }} == 0
+        if: steps.tag.outputs.exitcode == 0
 
   release_staging:
     runs-on: lambda-ubuntu-latest
