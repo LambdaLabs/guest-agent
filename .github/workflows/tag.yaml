@@ -31,7 +31,7 @@ jobs:
       - name: Run tagging commands
         id: tag
         run: |
-          task tag
+          task -x tag
           exitcode="$?"
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           # The range between 8 and 63 inclusive is reserved for custom
