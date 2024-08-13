@@ -25,6 +25,9 @@ jobs:
         with:
           version: 3.x
 
+      - name: Install deb-s3 dependencies
+        run: sudo apt install wget
+
       - name: Setup deb-s3
         uses: deb-s3/setup-deb-s3@v1
       
