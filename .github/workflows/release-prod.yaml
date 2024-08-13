@@ -36,6 +36,9 @@ jobs:
           sudo apt install -y deb-s3
           sudo gem install deb-s3
       
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
       - name: Release prod
         run: task release.prod
 
