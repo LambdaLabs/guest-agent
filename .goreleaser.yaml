@@ -2,7 +2,7 @@ version: 1
 project_name: lambda-guest-agent
 
 #builds:
-#  - id: default
+#  - id: guest-agent
 #    main: ./tools
 #    binary: tools
 #    goos:
@@ -10,11 +10,11 @@ project_name: lambda-guest-agent
 #    goarch:
 #    - amd64
 builds:
-- id: default
+- id: guest-agent
   skip: true
 
 nfpms:
-  - id: default
+  - id: guest-agent
     package_name: lambda-guest-agent
     vendor: Lambda Labs
     homepage: https://github.com/lambdal/guest-agent
@@ -33,7 +33,7 @@ nfpms:
       postinstall: "build/files/scripts/postinstall.sh"
 
 archives:
-  - id: default
+  - id: guest-agent
     format: tar.gz
     builds: [default]
     # this name template makes the OS and Arch compatible with the results of `uname`.
