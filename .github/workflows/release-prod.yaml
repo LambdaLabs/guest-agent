@@ -1,4 +1,5 @@
 name: Promote package to prod
+run-name: "Promote v${{ github.event.inputs.version }} to prod | @${{ github.actor}}"
 
 on:
   workflow_dispatch:
@@ -46,3 +47,4 @@ jobs:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
 
 
+""
