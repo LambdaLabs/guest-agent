@@ -3,8 +3,7 @@ project_name: lambda-guest-agent
 
 builds:
   - id: guest-agent
-    main: ./tools
-    binary: tools
+    main: ./
     goos:
     - linux
     goarch:
