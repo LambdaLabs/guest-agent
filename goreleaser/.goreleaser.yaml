@@ -18,15 +18,15 @@ nfpms:
     description: Description
     formats: [deb]
     contents:
-    - src: build/files/etc/lambda/guest-agent/
+    - src: ../build/files/etc/lambda/guest-agent/
       dst: /etc/lambda/guest-agent/
       type: tree
-    - src: build/files/usr/local/bin/lambda/
+    - src: ../build/files/usr/local/bin/lambda/
       dst: /usr/local/bin/lambda/
       type: tree
     scripts:
-      preinstall: "build/files/scripts/preinstall.sh"
-      postinstall: "build/files/scripts/postinstall.sh"
+      preinstall: "../build/files/scripts/preinstall.sh"
+      postinstall: "../build/files/scripts/postinstall.sh"
 
 archives:
   - id: guest-agent
