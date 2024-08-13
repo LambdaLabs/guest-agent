@@ -26,3 +26,4 @@ build/
 /guest-agent
 /tools/tools
 *DS_Store
+download/

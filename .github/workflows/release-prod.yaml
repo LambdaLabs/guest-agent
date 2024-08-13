@@ -1,0 +1,34 @@
+name: Promote package to prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to promote, without the leading 'v'."
+        type: string
+        required: true
+
+jobs:
+  release-prod:
+    runs-on: lambda-ubuntu-latest
+    steps:
+      - uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN }}
+
+      - name: Test Jfrog CLI connection
+        run: jf rt ping
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      - name: Setup deb-s3
+        uses: deb-s3/setup-deb-s3@v1
+      
+      - name: Release prod
+        run: task release.prod
+
+
