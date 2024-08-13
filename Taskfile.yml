@@ -9,15 +9,21 @@ tasks:
     cmds:
       - mkdir -p {{.DIR}}
 
+  build-tools:
+    desc: Build tools directory
+    cmds:
+    - cd ./tools && go build -o tools .
+
   tag:
     desc: Tag the git repo with the version specified in the VERSION file.
+    deps: [build-tools]
     cmds:
-    - go run ./tools tag --dry-run=false
+    - ./tools/tools tag --dry-run=false
   
   install-deps:
     desc: Install tool dependencies
     cmds:
-    - cat tools/tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
+    - cat tools/tools/external-tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
   
   tag.push:
     desc: Push tags to origin
@@ -54,8 +60,9 @@ tasks:
 
   build.templates:
     desc: Render configuration templates
+    deps: [build-tools]
     cmds:
-      - go run ./tools render_template
+      - ./tools/tools render_template
 
   build.clean:
     desc: Clean build artifacts
