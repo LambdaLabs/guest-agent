@@ -1,17 +1,14 @@
 version: 1
 project_name: lambda-guest-agent
 
-#builds:
-#  - id: guest-agent
-#    main: ./tools
-#    binary: tools
-#    goos:
-#    - linux
-#    goarch:
-#    - amd64
 builds:
-- id: guest-agent
-  skip: true
+  - id: guest-agent
+    main: ./tools
+    binary: tools
+    goos:
+    - linux
+    goarch:
+    - amd64
 
 nfpms:
   - id: guest-agent
