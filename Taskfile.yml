@@ -22,8 +22,9 @@ tasks:
   
   install-deps:
     desc: Install tool dependencies
+    dir: '{{.ROOT_DIR}}/tools'
     cmds:
-    - cat tools/tools/external-tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
+    - cat external-tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
   
   tag.push:
     desc: Push tags to origin

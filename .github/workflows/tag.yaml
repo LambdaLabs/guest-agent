@@ -26,7 +26,7 @@ jobs:
           cache-dependency-path: "**/*.sum"
 
       - name: Download Go dependencies
-        run: go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
+        run: cd tools/ && go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
 
       - name: Run tagging commands
         id: tag
@@ -64,7 +64,7 @@ jobs:
           cache-dependency-path: "**/*.sum"
 
       - name: Download Go dependencies
-        run: go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
+        run: cd tools/ && go run github.com/go-task/task/v3/cmd/task install-deps && echo "~/go/bin" >> $GITHUB_PATH
 
       - uses: jfrog/setup-jfrog-cli@v4
         env:
