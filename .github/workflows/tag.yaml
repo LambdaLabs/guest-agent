@@ -54,7 +54,7 @@ jobs:
       - run: sudo apt update && sudo apt install -y git make && git --version
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v5
