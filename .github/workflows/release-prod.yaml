@@ -1,5 +1,4 @@
 name: Promote package to prod
-run-name: "Promote v${{ github.event.inputs.version }} to prod | @${{ github.actor}}"
 
 on:
   workflow_dispatch:
@@ -8,6 +7,8 @@ on:
         description: "Version to promote, without the leading 'v'."
         type: string
         required: true
+
+run-name: "Promote v${{ github.event.inputs.version }} to prod | @${{ github.actor}}"
 
 jobs:
   release-prod:
