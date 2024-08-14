@@ -10,7 +10,7 @@ terraform {
 }
 
 import {
-    to = aws_s3_bucket.guest-agent-bucket-prod
+    to = aws_s3_bucket.guest_agent_bucket_prod
     id = "lambdalabs-guest-agent"
 }
 resource "aws_s3_bucket" "guest_agent_bucket_prod" {
