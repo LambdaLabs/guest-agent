@@ -12,6 +12,7 @@ run-name: "Promote v${{ github.event.inputs.version }} to prod | @${{ github.act
 
 permissions:
   id-token: write
+  contents: read
 
 jobs:
   release-prod:
