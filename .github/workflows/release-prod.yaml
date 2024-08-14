@@ -10,6 +10,9 @@ on:
 
 run-name: "Promote v${{ github.event.inputs.version }} to prod | @${{ github.actor}}"
 
+permissions:
+  id-token: write
+
 jobs:
   release-prod:
     runs-on: lambda-ubuntu-latest
