@@ -1,6 +1,6 @@
 variable "prefix" {
   type        = string
-  default     = "lambdalabs"
+  default     = "lambdalabs-guest-agent"
   description = "A prefix for all resource names for namespacing purposes"
 }
 
