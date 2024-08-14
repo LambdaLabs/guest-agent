@@ -27,3 +27,4 @@ build/
 /tools/tools
 *DS_Store
 download/
+.terraform/
