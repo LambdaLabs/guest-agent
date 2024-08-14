@@ -13,6 +13,6 @@ import {
     to = aws_s3_bucket.guest-agent-bucket-prod
     id = "lambdalabs-guest-agent"
 }
-resource "aws_s3_bucket" "guest-agent-bucket-prod" {
+resource "aws_s3_bucket" "guest_agent_bucket_prod" {
     bucket = "lambdalabs-guest-agent"
 }
