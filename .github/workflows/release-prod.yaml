@@ -50,7 +50,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-west-2
-          role-to-assume: arn:aws:iam::921575574570:policy/lambdalabs-guest-agent-github-actions
+          role-to-assume: arn:aws:iam::921575574570:role/lambdalabs-guest-agent-github-actions
 
       - name: Release prod
         run: task release.prod
