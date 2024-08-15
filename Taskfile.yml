@@ -102,10 +102,11 @@ tasks:
   deb-s3.upload:
     desc: Upload file using deb-s3 to S3 bucket
     cmds:
-      - deb-s3 upload --codename focal --component main --prefix g/guest-agent --bucket lambdalabs-guest-agent --visibility=nil {{ .FROM_DIR }}/lambda-guest-agent*.deb --sign CA708F1FBA73322E33FCB652891A94BE192FD853
+      - deb-s3 upload --codename focal --component main --prefix g/guest-agent --bucket lambdalabs-guest-agent --visibility=nil {{ .FROM_DIR }}/lambda-guest-agent*.deb --sign ${GPG_KEY_ID}
     requires:
       vars:
         - FROM_DIR
+        - GPG_KEY_ID
 
   jfrog.download:
     desc: Download a specific version of guest-agent from the Artifactory repo.

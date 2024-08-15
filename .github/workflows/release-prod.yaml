@@ -17,6 +17,7 @@ permissions:
 jobs:
   release-prod:
     runs-on: lambda-ubuntu-latest
+    environment: release-prod
     steps:
       - uses: jfrog/setup-jfrog-cli@v4
         env:
@@ -52,11 +53,17 @@ jobs:
           aws-region: us-west-2
           role-to-assume: arn:aws:iam::921575574570:role/lambdalabs-guest-agent-github-actions
 
-      - name: debug
-        run: echo "$AWS_REGION $AWS_ACCESS_KEY_ID $AWS_DEFAULT_REGION"
+      - name: Setup signing keys in GPG
+        run: |
+          gpg --allow-secret-key-import <(echo "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
+          gpg --import <(echo "$APT_SIGNING_KEY_PUBLIC_BASE64" | base64 --decode)
+        env:
+          APT_SIGNING_KEY_PRIVATE_BASE64: ${{ secrets.APT_SIGNING_KEY_PRIVATE_BASE64 }}
+          APT_SIGNING_KEY_PUBLIC_BASE64: ${{ secrets.APT_SIGNING_KEY_PUBLIC_BASE64 }}
 
       - name: Release prod
         run: task release.prod
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
+          GPG_KEY_ID: CA708F1FBA73322E33FCB652891A94BE192FD853
 
