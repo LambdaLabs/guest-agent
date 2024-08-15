@@ -55,8 +55,10 @@ jobs:
 
       - name: Setup signing keys in GPG
         run: |
-          gpg --allow-secret-key-import <(echo "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
+          gpg --version
+          gpg --import <(echo "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
           gpg --import <(echo "$APT_SIGNING_KEY_PUBLIC_BASE64" | base64 --decode)
+          gpg --list-keys
         env:
           APT_SIGNING_KEY_PRIVATE_BASE64: ${{ secrets.APT_SIGNING_KEY_PRIVATE_BASE64 }}
           APT_SIGNING_KEY_PUBLIC_BASE64: ${{ secrets.APT_SIGNING_KEY_PUBLIC_BASE64 }}
