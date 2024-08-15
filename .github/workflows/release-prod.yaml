@@ -56,8 +56,11 @@ jobs:
       - name: Setup signing keys in GPG
         run: |
           gpg --version
-          gpg --import <(echo "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
-          gpg --import <(echo "$APT_SIGNING_KEY_PUBLIC_BASE64" | base64 --decode)
+          echo "importing private key"
+          gpg --batch --import <(printf "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
+          echo "importing public key"
+          gpg --batch --import <(printf "$APT_SIGNING_KEY_PUBLIC_BASE64" | base64 --decode)
+          echo "listing keys"
           gpg --list-keys
         env:
           APT_SIGNING_KEY_PRIVATE_BASE64: ${{ secrets.APT_SIGNING_KEY_PRIVATE_BASE64 }}
@@ -68,4 +71,3 @@ jobs:
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
           GPG_KEY_ID: 891A94BE192FD853
-
