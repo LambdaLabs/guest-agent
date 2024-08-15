@@ -67,7 +67,10 @@ jobs:
           APT_SIGNING_KEY_PUBLIC_BASE64: ${{ secrets.APT_SIGNING_KEY_PUBLIC_BASE64 }}
 
       - name: Release prod
-        run: task release.prod
+        run: |
+          task release.prod
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
           GPG_KEY_ID: 891A94BE192FD853
+          DEB_S3_GPG_OPTIONS: "--batch --yes --passphrase ${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}"
+
