@@ -31,9 +31,7 @@ resource "aws_iam_role" "github_actions" {
 data "aws_iam_policy_document" "github_actions" {
   statement {
     actions = [
-      "s3:PutObject",
-      "s3:GetObject",
-      "s3:DeleteObject",
+      "s3:*"
     ]
     resources = [
       aws_s3_bucket.guest_agent_bucket_prod.arn,

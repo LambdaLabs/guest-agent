@@ -52,6 +52,9 @@ jobs:
           aws-region: us-west-2
           role-to-assume: arn:aws:iam::921575574570:role/lambdalabs-guest-agent-github-actions
 
+      - name: debug
+        run: echo "$AWS_REGION $AWS_ACCESS_KEY_ID $AWS_DEFAULT_REGION"
+
       - name: Release prod
         run: task release.prod
         env:
