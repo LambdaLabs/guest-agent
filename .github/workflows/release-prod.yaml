@@ -68,7 +68,9 @@ jobs:
 
       - name: Release prod
         run: |
-          task release.prod
+          jf rt download guest-agent/lambda-guest-agent_${GUEST_AGENT_VERSION}_linux_amd64.deb download/
+          deb-s3 upload --gpg-options="--no-tty --batch --yes --passphrase ${APT_SIGNING_KEY_PASSPHRASE}" --codename focal --component main --bucket lambdalabs-guest-agent --visibility=nil download//lambda-guest-agent*.deb --sign ${GPG_KEY_ID}
+        #task release.prod
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
           GPG_KEY_ID: 891A94BE192FD853
@@ -76,4 +78,5 @@ jobs:
           # fine on Github Actionsn because it's a single-user system and secrets are
           # scrubbed from logs.
           DEB_S3_GPG_OPTIONS: --no-tty --batch --yes --passphrase "${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}"
+          APT_SIGNING_KEY_PASSPHRASE: ${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}
 
