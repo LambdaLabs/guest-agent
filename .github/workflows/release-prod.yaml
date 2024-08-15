@@ -67,5 +67,5 @@ jobs:
         run: task release.prod
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
-          GPG_KEY_ID: CA708F1FBA73322E33FCB652891A94BE192FD853
+          GPG_KEY_ID: 891A94BE192FD853
 
