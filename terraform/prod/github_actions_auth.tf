@@ -35,6 +35,7 @@ data "aws_iam_policy_document" "github_actions" {
     ]
     resources = [
       aws_s3_bucket.guest_agent_bucket_prod.arn,
+      "${aws_s3_bucket.guest_agent_bucket_prod.arn}/*",
     ]
   }
 }
