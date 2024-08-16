@@ -70,7 +70,7 @@ jobs:
       - name: Release prod
         run: |
           jf rt download guest-agent/lambda-guest-agent_${GUEST_AGENT_VERSION}_linux_amd64.deb download/
-          deb-s3 upload --gpg-options "--pinentry-mode=loopback --no-tty --batch --passphrase ${APT_SIGNING_KEY_PASSPHRASE}" --codename focal --component main --bucket lambdalabs-guest-agent --visibility=nil download//lambda-guest-agent*.deb --sign ${GPG_KEY_ID}
+          deb-s3 upload --gpg-options="--pinentry-mode=loopback --no-tty --batch --passphrase ${APT_SIGNING_KEY_PASSPHRASE}" --codename=focal --component=main --bucket=lambdalabs-guest-agent --visibility=nil --sign=${GPG_KEY_ID} download//lambda-guest-agent*.deb 
         #task release.prod
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
