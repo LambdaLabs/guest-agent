@@ -76,6 +76,6 @@ jobs:
           # Don't you dare use the --passphrase option on your local computer. This is only
           # fine on Github Actionsn because it's a single-user system and secrets are
           # scrubbed from logs.
-          DEB_S3_GPG_OPTIONS: \-\-no-tty \-\-batch \-\-yes \-\-passphrase "${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}"
+          DEB_S3_GPG_OPTIONS: \-\-pinentry-mode=loopback \-\-no-tty \-\-batch \-\-yes \-\-passphrase "${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}"
           APT_SIGNING_KEY_PASSPHRASE: ${{ secrets.APT_SIGNING_KEY_PASSPHRASE }}
 
