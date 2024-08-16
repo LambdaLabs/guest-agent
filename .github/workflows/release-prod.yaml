@@ -64,8 +64,9 @@ jobs:
           APT_SIGNING_KEY_PRIVATE_BASE64: ${{ secrets.APT_SIGNING_KEY_PRIVATE_BASE64 }}
           APT_SIGNING_KEY_PUBLIC_BASE64: ${{ secrets.APT_SIGNING_KEY_PUBLIC_BASE64 }}
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      #- name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
+
       - name: Release prod
         run: |
           jf rt download guest-agent/lambda-guest-agent_${GUEST_AGENT_VERSION}_linux_amd64.deb download/
