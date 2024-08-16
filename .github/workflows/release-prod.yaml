@@ -56,11 +56,8 @@ jobs:
       - name: Setup signing keys in GPG
         run: |
           gpg --version
-          echo "importing private key"
           gpg --batch --import <(printf "$APT_SIGNING_KEY_PRIVATE_BASE64" | base64 --decode)
-          echo "importing public key"
           gpg --batch --import <(printf "$APT_SIGNING_KEY_PUBLIC_BASE64" | base64 --decode)
-          echo "listing keys"
           gpg --list-keys
 
         env:
@@ -72,7 +69,7 @@ jobs:
       - name: Release prod
         run: |
           jf rt download guest-agent/lambda-guest-agent_${GUEST_AGENT_VERSION}_linux_amd64.deb download/
-          deb-s3 upload --gpg-options "--no-tty --batch --yes --passphrase ${APT_SIGNING_KEY_PASSPHRASE}" --codename focal --component main --bucket lambdalabs-guest-agent --visibility=nil download//lambda-guest-agent*.deb --sign ${GPG_KEY_ID}
+          deb-s3 upload --gpg-options "--pinentry-mode=loopback --no-tty --batch --passphrase ${APT_SIGNING_KEY_PASSPHRASE}" --codename focal --component main --bucket lambdalabs-guest-agent --visibility=nil download//lambda-guest-agent*.deb --sign ${GPG_KEY_ID}
         #task release.prod
         env:
           GUEST_AGENT_VERSION: ${{ github.event.inputs.version }}
