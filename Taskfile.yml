@@ -102,7 +102,7 @@ tasks:
   deb-s3.upload:
     desc: Upload file using deb-s3 to S3 bucket
     cmds:
-      - deb-s3 upload --gpg-options="${DEB_S3_GPG_OPTIONS}" --codename=focal --component=main --bucket=lambdalabs-guest-agent --visibility=nil --sign=${GPG_KEY_ID} {{ .FROM_DIR }}/lambda-guest-agent*.deb
+      - deb-s3 upload --gpg-options="${DEB_S3_GPG_OPTIONS}" --codename=stable --component=main --bucket=lambdalabs-guest-agent --visibility=nil --sign=${GPG_KEY_ID} {{ .FROM_DIR }}/lambda-guest-agent*.deb
     requires:
       vars:
         - FROM_DIR
