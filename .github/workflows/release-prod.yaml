@@ -21,8 +21,7 @@ jobs:
     steps:
       - uses: jfrog/setup-jfrog-cli@v4
         env:
-          #JF_URL: ${{ vars.ARTIFACTORY_URL }}
-          JF_URL: "https://artifactory-alb.aws.lambdalabs.cloud/artifactory/"
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN }}
 
       - name: Test Jfrog CLI connection
