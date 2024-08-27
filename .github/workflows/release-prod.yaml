@@ -64,6 +64,12 @@ jobs:
           APT_SIGNING_KEY_PRIVATE_BASE64: ${{ secrets.APT_SIGNING_KEY_PRIVATE_BASE64 }}
           APT_SIGNING_KEY_PUBLIC_BASE64: ${{ secrets.APT_SIGNING_KEY_PUBLIC_BASE64 }}
 
+      - name: Install aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
       #- name: Setup tmate session
       #  uses: mxschmitt/action-tmate@v3
 
