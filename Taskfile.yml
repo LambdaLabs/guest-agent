@@ -128,6 +128,8 @@ tasks:
       - task: deb-s3.upload
         vars:
           FROM_DIR: download/
+      - aws s3 cp ./files/scripts/install.sh s3://lambdalabs-guest-agent/scripts/install.sh
+      - aws s3 cp ./files/keys/lambdalabs-guest-agent.pub.gpg s3://lambdalabs-guest-agent/keys/lambdalabs-guest-agent.pub.gpg
     requires:
       vars:
         - GUEST_AGENT_VERSION
