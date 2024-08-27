@@ -32,8 +32,8 @@ jobs:
         with:
           version: 3.x
 
-      - name: Install deb-s3 dependencies
-        run: sudo apt install wget
+      - name: Install various dependencies
+        run: sudo apt install wget curl unzip
 
       - name: Setup deb-s3
         run: |
