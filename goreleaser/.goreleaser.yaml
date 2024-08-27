@@ -63,7 +63,7 @@ release:
 publishers:
 - name: artifactory-staging
   cmd: >-
-    jfrog rt upload --deb focal/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/"
+    jfrog rt upload --deb stable/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/"
   dir: "{{ dir .ArtifactPath }}"
 
 
