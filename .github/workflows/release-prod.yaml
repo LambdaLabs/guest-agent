@@ -33,7 +33,7 @@ jobs:
           version: 3.x
 
       - name: Install various dependencies
-        run: sudo apt install wget curl unzip
+        run: sudo apt install -y wget curl unzip
 
       - name: Setup deb-s3
         run: |
