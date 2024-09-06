@@ -4,9 +4,9 @@ Requires={{.GuestAgentUpdaterServiceName}}
 
 [Timer]
 Unit={{.GuestAgentUpdaterServiceName}}
-OnCalendar=Mon *-*-* 14:00:00
+OnCalendar=*-*-01,15 14:00:00
 FixedRandomDelay=true
-RandomizedDelaySec=604800
+RandomizedDelaySec=1209600
 
 [Install]
 WantedBy=timers.target
