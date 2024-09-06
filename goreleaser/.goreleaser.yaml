@@ -28,6 +28,7 @@ nfpms:
       preinstall: "../build/files/scripts/preinstall.sh"
       postinstall: "../build/files/scripts/postinstall.sh"
       preremove: "../build/files/scripts/preremove.sh"
+      postremove: "../build/files/scripts/postremove.sh"
 
 archives:
   - id: guest-agent
