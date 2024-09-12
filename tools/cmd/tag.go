@@ -10,6 +10,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -29,7 +30,11 @@ func NewTagCmd(v *viper.Viper) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use: "tag",
 		Run: func(cmd *cobra.Command, args []string) {
-			tagger := NewTagger(v)
+			tagger, err := NewTagger(v)
+			if err != nil {
+				printStack(err)
+				os.Exit(1)
+			}
 			if err := tagger.Tag(); err != nil {
 				if errors.Is(ErrNoNewVersion, err) {
 					os.Exit(EXIT_CODE_NO_NEW_VERSION)
@@ -53,7 +58,7 @@ func (t *Tagger) createTag(repo *git.Repository, version string) error {
 		return errors.New(err)
 	}
 
-	if t.dryRun {
+	if t.DryRun {
 		logger.Info().Str("tag", version).Msg("would have created tag")
 		return nil
 	}
@@ -123,16 +128,22 @@ func (t *Tagger) largestTagSemver(repo *git.Repository) (*semver.Version, error)
 	return largestTag, nil
 }
 
-func NewTagger(v *viper.Viper) *Tagger {
-	return &Tagger{
-		dryRun:  viper.GetBool("dry-run"),
-		version: viper.GetString("guest_agent_version"),
+func NewTagger(v *viper.Viper) (*Tagger, error) {
+	t := &Tagger{}
+	if err := v.Unmarshal(t); err != nil {
+		return nil, errors.New(err)
 	}
+	if err := validator.New(
+		validator.WithRequiredStructEnabled(),
+	).Struct(t); err != nil {
+		return nil, errors.New(err)
+	}
+	return t, nil
 }
 
 type Tagger struct {
-	dryRun  bool
-	version string
+	DryRun  bool   `mapstructure:"dry-run"`
+	Version string `mapstructure:"guest_agent_version" validate:"required"`
 }
 
 func (t *Tagger) Tag() error {
@@ -153,9 +164,9 @@ func (t *Tagger) Tag() error {
 
 	logger.Info().Msg("found largest semver tag")
 
-	requestedVersion, err := semver.NewVersion(t.version)
+	requestedVersion, err := semver.NewVersion(t.Version)
 	if err != nil {
-		logger.Err(err).Str("requested-version", string(t.version)).Msg("error when constructing semver from version config")
+		logger.Err(err).Str("requested-version", string(t.Version)).Msg("error when constructing semver from version config")
 		return errors.New(err)
 	}
 

@@ -1,63 +1,15 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"text/template"
 
 	"github.com/chigopher/pathlib"
 	"github.com/go-errors/errors"
-	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
-
-var logger zerolog.Logger
-
-type timestampHook struct{}
-
-func (t timestampHook) Run(e *zerolog.Event, level zerolog.Level, message string) {
-	e.Timestamp()
-}
-
-func NewRootCmd() *cobra.Command {
-	v := viper.New()
-	v.SetConfigType("env")
-	v.SetConfigName("guest-agent")
-	v.AddConfigPath(".")
-	v.SetEnvPrefix("GUEST_AGENT")
-	cmd := &cobra.Command{
-		Use: "guest_agent [command]",
-	}
-
-	logger = zerolog.New(zerolog.ConsoleWriter{
-		Out: os.Stdout,
-	}).Hook(timestampHook{})
-
-	subCommands := []func(v *viper.Viper) (*cobra.Command, error){
-		NewRenderTemplateCmd,
-		NewTagCmd,
-	}
-	for _, CommandFunc := range subCommands {
-		subCmd, err := CommandFunc(v)
-		if err != nil {
-			panic(err)
-		}
-		cmd.AddCommand(subCmd)
-	}
-	return cmd
-}
-
-func printStack(err error) {
-	if err == nil {
-		return
-	}
-	newErr, ok := err.(*errors.Error)
-	if ok {
-		fmt.Printf("%v", newErr.ErrorStack())
-	}
-}
 
 func NewRenderTemplateCmd(v *viper.Viper) (*cobra.Command, error) {
 	if err := v.ReadInConfig(); err != nil {
@@ -103,7 +55,7 @@ func GetNewTemplateRendererFromViper(v *viper.Viper) (*TemplateRenderer, error) 
 
 	rendererConf := rendererConf{}
 	if err := v.Unmarshal(&rendererConf); err != nil {
-		return nil, errors.Join(err)
+		return nil, errors.New(err)
 	}
 	if rendererConf.TemplatesDir == "" {
 		return nil, errors.New("must specify templates dir")
@@ -123,7 +75,7 @@ func (r *TemplateRenderer) Run() error {
 		pathlib.WalkVisitFiles(true),
 	)
 	if err != nil {
-		return errors.Join(err)
+		return errors.New(err)
 	}
 
 	err = walker.Walk(func(path *pathlib.Path, info os.FileInfo, err error) error {
@@ -134,33 +86,33 @@ func (r *TemplateRenderer) Run() error {
 
 		fileBytes, err := path.ReadFile()
 		if err != nil {
-			return errors.Join(err)
+			return errors.New(err)
 		}
 		parsed, err := template.Parse(string(fileBytes))
 		if err != nil {
-			return errors.Join(err)
+			return errors.New(err)
 		}
 		pathRelative, err := path.RelativeTo(templatesDir)
 		if err != nil {
-			return errors.Join(err)
+			return errors.New(err)
 		}
 		fileOutpath := outputDir.JoinPath(pathRelative)
 		if err := fileOutpath.Parent().MkdirAll(); err != nil {
-			return errors.Join(err)
+			return errors.New(err)
 		}
 		outFile, err := fileOutpath.OpenFile(os.O_WRONLY | os.O_TRUNC | os.O_CREATE)
 		if err != nil {
-			return errors.Join(err)
+			return errors.New(err)
 		}
 		defer outFile.Close()
 
 		if err := parsed.Execute(outFile, r.config); err != nil {
-			return errors.Join(err)
+			return errors.New(err)
 		}
 		return nil
 	})
 	if err != nil {
-		return errors.Join(err)
+		return errors.New(err)
 	}
 	return nil
 }
