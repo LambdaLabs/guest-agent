@@ -90,6 +90,7 @@ type rendererConf struct {
 	GuestAgentUpdaterServiceFile string `mapstructure:"guest_agent_updater_service_file"`
 	GuestAgentUpdaterTimerName   string `mapstructure:"guest_agent_updater_timer_name"`
 	GuestAgentUpdaterTimerFile   string `mapstructure:"guest_agent_updater_timer_file"`
+	GuestAgentVersion            string `mapstructure:"guest_agent_version"`
 	TemplatesDir                 string `mapstructure:"guest_agent_templates_dir"`
 	TemplatesOutDir              string `mapstructure:"guest_agent_templates_outdir"`
 }
