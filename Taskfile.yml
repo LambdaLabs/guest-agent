@@ -38,10 +38,7 @@ tasks:
       vars:
         DIR: ./build
     cmds:
-      - cd ./build && rm -rf telegraf/ && git clone --depth 1 --branch {{.TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
-    vars:
-      TELEGRAF_VERSION:
-        sh: head -n 1 ./TELEGRAF_VERSION | tr -d '\n'
+      - cd ./build && rm -rf telegraf/ && git clone --depth 1 --branch {{.GUEST_AGENT_TELEGRAF_VERSION}} https://github.com/influxdata/telegraf.git
 
   build.telegraf:
     desc: Build telegraf
@@ -111,19 +108,19 @@ tasks:
   jfrog.download:
     desc: Download a specific version of guest-agent from the Artifactory repo.
     cmds:
-      - jf rt download guest-agent/lambda-guest-agent_{{.GUEST_AGENT_VERSION}}_linux_{{.GUEST_AGENT_ARCH | default "amd64"}}.deb {{ .DOWNLOAD_DIR  | default "download/" }}
+      - jf rt download guest-agent/lambda-guest-agent_{{.GUEST_AGENT_PROMOTE_VERSION}}_linux_{{.GUEST_AGENT_ARCH | default "amd64"}}.deb {{ .DOWNLOAD_DIR  | default "download/" }}
     requires:
       vars:
-        - GUEST_AGENT_VERSION
+        - GUEST_AGENT_PROMOTE_VERSION
     status:
-      - test -f {{ .DOWNLOAD_DIR | default "download/" }}/lambda-guest-agent_{{.GUEST_AGENT_VERSION}}_linux_{{.GUEST_AGENT_ARCH | default "amd64"}}.deb
+      - test -f {{ .DOWNLOAD_DIR | default "download/" }}/lambda-guest-agent_{{.GUEST_AGENT_PROMOTE_VERSION}}_linux_{{.GUEST_AGENT_ARCH | default "amd64"}}.deb
   
   release.prod:
     desc: Promote to the prod S3 repo
     cmds:
       - task: jfrog.download
         vars:
-          GUEST_AGENET_VERSION: "{{.GUEST_AGENT_VERSION}}"
+          GUEST_AGENT_PROMOTE_VERSION: "{{.GUEST_AGENT_PROMOTE_VERSION}}"
           DOWNLOAD_DIR: "download/"
       - task: deb-s3.upload
         vars:
@@ -132,4 +129,4 @@ tasks:
       - aws s3 cp ./files/keys/lambdalabs-guest-agent.pub.gpg s3://lambdalabs-guest-agent/keys/lambdalabs-guest-agent.pub.gpg
     requires:
       vars:
-        - GUEST_AGENT_VERSION
+        - GUEST_AGENT_PROMOTE_VERSION

@@ -3,11 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/chigopher/pathlib"
 	"github.com/go-errors/errors"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -127,12 +125,14 @@ func (t *Tagger) largestTagSemver(repo *git.Repository) (*semver.Version, error)
 
 func NewTagger(v *viper.Viper) *Tagger {
 	return &Tagger{
-		dryRun: viper.GetBool("dry-run"),
+		dryRun:  viper.GetBool("dry-run"),
+		version: viper.GetString("guest_agent_version"),
 	}
 }
 
 type Tagger struct {
-	dryRun bool
+	dryRun  bool
+	version string
 }
 
 func (t *Tagger) Tag() error {
@@ -153,22 +153,16 @@ func (t *Tagger) Tag() error {
 
 	logger.Info().Msg("found largest semver tag")
 
-	versionFromFileBytes, err := pathlib.NewPath("VERSION").ReadFile()
+	requestedVersion, err := semver.NewVersion(t.version)
 	if err != nil {
-		return errors.New(err)
-	}
-	versionFromFile := strings.TrimSuffix(string(versionFromFileBytes), "\n")
-
-	fileVersion, err := semver.NewVersion(versionFromFile)
-	if err != nil {
-		logger.Err(err).Str("version-from-file", string(versionFromFile)).Msg("error when constructing semver from file")
+		logger.Err(err).Str("requested-version", string(t.version)).Msg("error when constructing semver from version config")
 		return errors.New(err)
 	}
 
 	logger = logger.With().
-		Stringer("file-version", fileVersion).
+		Stringer("requested-version", requestedVersion).
 		Logger()
-	if !fileVersion.GreaterThan(taggedVersion) {
+	if !requestedVersion.GreaterThan(taggedVersion) {
 		logger.Info().
 			Msg("VERSION is not greater than latest git tag, nothing to do.")
 		return ErrNoNewVersion
@@ -189,7 +183,7 @@ func (t *Tagger) Tag() error {
 		return errors.New("dirty git state")
 	}
 
-	if err := t.createTag(repo, fmt.Sprintf("v%s", fileVersion.String())); err != nil {
+	if err := t.createTag(repo, fmt.Sprintf("v%s", requestedVersion.String())); err != nil {
 		return err
 	}
 	logger.Info().Msg("created new tag. Push to origin still required.")
