@@ -3,7 +3,7 @@ name: Mirroring
 on: [push, delete]
 
 jobs:
-  lambdalabs/guest-agent:
+  lambdalabs-guest-agent:
     environment: mirror
     runs-on: ubuntu-latest
     steps:                                              # <-- must use actions/checkout before mirroring!
