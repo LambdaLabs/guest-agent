@@ -69,8 +69,7 @@ retries=-1
 curl -s localhost:9101/metrics >/dev/null
 rt=$?
 if [ $rt -ne 0 ]; then
-    error "call to metrics endpoint failed"
-    continue
+    exit_with_error "call to metrics endpoint failed"
 fi
 success "Curl to port 9101 succeeded"
 

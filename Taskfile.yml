@@ -143,8 +143,9 @@ tasks:
     desc: Run e2e tests on a Lambda VM
     deps: [build-tools]
     cmds:
-      - cd ./tools && ./tools test --debian-path {{ .GUEST_AGENT_DEBIAN_PATH }} --expected-version {{ .GUEST_AGENT_EXPECTED_VERSION }}
+      - cd ./tools && ./tools test --debian-path {{ .GUEST_AGENT_DEBIAN_PATH }} --expected-version {{ .GUEST_AGENT_EXPECTED_VERSION }} --remote-host {{ .GUEST_AGENT_REMOTE_TEST_HOST }}
     requires:
       vars:
         - GUEST_AGENT_EXPECTED_VERSION
         - GUEST_AGENT_DEBIAN_PATH
+        - GUEST_AGENT_REMOTE_TEST_HOST
