@@ -128,7 +128,7 @@ tasks:
     cmds:
       - task: jfrog.download
         vars:
-          FROG_DOWNLOAD_VERSION: "{{.GUEST_AGENT_PROMOTE_VERSION}}"
+          FROG_DOWNLOAD_VERSION: "{{ .GUEST_AGENT_PROMOTE_VERSION }}"
           JFROG_DOWNLOAD_DIR: "download/"
       - task: deb-s3.upload
         vars:
