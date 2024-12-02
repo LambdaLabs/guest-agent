@@ -7,6 +7,10 @@ on:
         description: "Version to promote, without the leading 'v'."
         type: string
         required: true
+      remote_test_host:
+        description: "IP address of Lambda admin VM to perform e2e tests on."
+        type: string
+        required: true
 
 run-name: "Test v${{ github.event.inputs.version }} e2e | @${{ github.actor}}"
 
@@ -72,3 +76,4 @@ jobs:
         env:
           GUEST_AGENT_DEBIAN_PATH: "../${{ steps.get_artifact_path.outputs.debian_path }}"
           GUEST_AGENT_EXPECTED_VERSION: ${{ github.event.inputs.version }}
+          GUEST_AGENT_REMOTE_TEST_HOST: ${{ github.event.inputs.remote_test_host }}
