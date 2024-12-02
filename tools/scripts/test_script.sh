@@ -9,7 +9,7 @@ DEB_PATH="$1"; shift
 EXPECTED_VERSION="$1"; shift
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-EXPECTED_METRIC_COUNT=126
+EXPECTED_METRIC_COUNT=100
 
 function error {
     msg="$1"
