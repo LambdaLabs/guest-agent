@@ -205,6 +205,102 @@
           ],
           "title": "Local Disk Read/Write",
           "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "Bps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 1
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "max by(host, mountpoint, operation) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\"}[$__rate_interval]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Bytes Rate",
+          "type": "timeseries"
         }
       ],
       "title": "Disk",
@@ -488,7 +584,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 26
+            "y": 74
           },
           "id": 10,
           "options": {
@@ -584,7 +680,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 26
+            "y": 74
           },
           "id": 11,
           "options": {
@@ -679,7 +775,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -869,7 +966,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -885,7 +983,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 27
+            "y": 11
           },
           "id": 5,
           "options": {
@@ -947,7 +1045,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 27
+            "y": 11
           },
           "id": 6,
           "options": {
@@ -1009,6 +1107,194 @@
           ],
           "title": "GPU Power Draw (average by host)",
           "type": "heatmap"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Uncorrectable row remaps indicate a fatal ECC memory event within a particular row of GPU memory. Any GPU workload that was mapped to this particular row of memory likely encountered a fatal error.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "host"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 314
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 19
+          },
+          "id": 22,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "exemplar": false,
+              "expr": "lambda_guest_agent_nvidia_smi_remapped_rows_uncorrectable > 0",
+              "format": "table",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Remapped Rows Uncorrectable",
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Correctable row remaps indicate a non-fatal ECC memory event within a particular row of GPU memory. The device was able to successfully remap the row out of usage without impact to running workloads.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "host"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 314
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "instance"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 342
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 19
+          },
+          "id": 23,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "exemplar": false,
+              "expr": "lambda_guest_agent_nvidia_smi_remapped_rows_correctable > 0",
+              "format": "table",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Remapped Rows Correctable",
+          "type": "table"
         }
       ],
       "title": "GPU",
@@ -1089,7 +1375,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 4
+            "y": 44
           },
           "id": 1,
           "options": {
@@ -1151,7 +1437,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 4
+            "y": 44
           },
           "id": 2,
           "options": {
@@ -1273,8 +1559,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1290,7 +1575,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 5
+            "y": 45
           },
           "id": 12,
           "options": {
@@ -1367,8 +1652,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1384,7 +1668,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 5
+            "y": 45
           },
           "id": 18,
           "options": {
@@ -1461,8 +1745,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1477,7 +1760,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 13
+            "y": 61
           },
           "id": 19,
           "options": {
@@ -1554,8 +1837,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1571,7 +1853,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 13
+            "y": 61
           },
           "id": 20,
           "options": {
@@ -1636,10 +1918,10 @@
       {
         "current": {
           "text": [
-            "All"
+            "vda1"
           ],
           "value": [
-            "$__all"
+            "vda1"
           ]
         },
         "definition": "label_values(lambda_guest_agent_diskio_read_bytes,name)",
@@ -1666,6 +1948,6 @@
   "timezone": "browser",
   "title": "Lambda Guest Agent",
   "uid": "edxq0q411fv28f",
-  "version": 19,
+  "version": 27,
   "weekStart": ""
 }
