@@ -81,7 +81,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -176,7 +177,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "rate(lambda_guest_agent_diskio_read_bytes{name=~\"$disk\"}[$__rate_interval])",
+              "expr": "rate(lambda_guest_agent_diskio_read_bytes{name=~\"$disk\", host=~\"$host\"}[$__rate_interval])",
               "fullMetaSearch": false,
               "includeNullMetadata": false,
               "instant": false,
@@ -192,7 +193,7 @@
               },
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "rate(lambda_guest_agent_diskio_write_bytes{name=~\"$disk\"}[$__rate_interval]) * -1",
+              "expr": "rate(lambda_guest_agent_diskio_write_bytes{name=~\"$disk\", host=~\"$host\"}[$__rate_interval]) * -1",
               "fullMetaSearch": false,
               "hide": false,
               "includeNullMetadata": false,
@@ -250,19 +251,26 @@
                 }
               },
               "mappings": [],
+              "max": 100,
+              "min": 0,
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 75
                   },
                   {
                     "color": "red",
-                    "value": 80
+                    "value": 90
                   }
                 ]
               },
-              "unit": "Bps"
+              "unit": "percent"
             },
             "overrides": []
           },
@@ -271,6 +279,249 @@
             "w": 12,
             "x": 12,
             "y": 1
+          },
+          "id": 26,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "exemplar": false,
+              "expr": "avg by(host, path) (lambda_guest_agent_disk_used_percent{host=~\"$host\"})",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Local Disk Utilization Percent",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Retransmits indicate an error with communicating with the NFS server.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 9
+          },
+          "id": 25,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "lambda_guest_agent_nfsstat_retrans{host=~\"$host\"}",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Retransmits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": true,
+                "axisColorMode": "series",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 8,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "bps"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "shades"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Read"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "shades"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Write"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 9
           },
           "id": 21,
           "options": {
@@ -290,16 +541,33 @@
             {
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "max by(host, mountpoint, operation) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\"}[$__rate_interval]))",
+              "expr": "max by(host, mountpoint) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\", operation=\"READ\"}[$__rate_interval])) * 8",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "__auto",
               "range": true,
               "refId": "A",
               "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "max by(host, mountpoint) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\", operation=\"WRITE\"}[$__rate_interval])) * -8",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "B",
+              "useBackend": false
             }
           ],
-          "title": "NFS Bytes Rate",
+          "title": "NFS Throughput",
           "type": "timeseries"
         }
       ],
@@ -365,7 +633,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -467,7 +736,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -532,14 +802,14 @@
               },
               "custom": {
                 "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
+                "axisCenteredZero": true,
+                "axisColorMode": "series",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
                 "barWidthFactor": 0.6,
                 "drawStyle": "line",
-                "fillOpacity": 0,
+                "fillOpacity": 7,
                 "gradientMode": "none",
                 "hideFrom": {
                   "legend": false,
@@ -568,7 +838,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -576,15 +847,62 @@
                   }
                 ]
               },
-              "unit": "Bps"
+              "unit": "bps"
             },
-            "overrides": []
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "shades"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Receive"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "shades"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Send"
+                  }
+                ]
+              }
+            ]
           },
           "gridPos": {
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 74
+            "y": 10
           },
           "id": 10,
           "options": {
@@ -604,112 +922,33 @@
             {
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "avg by(interface, host) (rate(lambda_guest_agent_net_bytes_recv{host=~\"$host\"}[$__rate_interval]))",
+              "expr": "avg by(interface, host) (rate(lambda_guest_agent_net_bytes_recv{host=~\"$host\"}[$__rate_interval])) * 8",
               "fullMetaSearch": false,
               "includeNullMetadata": false,
               "legendFormat": "__auto",
               "range": true,
               "refId": "A",
               "useBackend": false
-            }
-          ],
-          "title": "Ethernet Bytes Recv Rate",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "Bps"
             },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 74
-          },
-          "id": 11,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.3.1",
-          "targets": [
             {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "avg by(interface, host) (rate(lambda_guest_agent_net_bytes_sent{host=~\"$host\"}[$__rate_interval]))",
+              "expr": "avg by(host, interface) (rate(lambda_guest_agent_net_bytes_sent{host=~\"$host\"}[$__rate_interval])) * -8",
               "fullMetaSearch": false,
+              "hide": false,
               "includeNullMetadata": false,
+              "instant": false,
               "legendFormat": "__auto",
               "range": true,
-              "refId": "A",
+              "refId": "B",
               "useBackend": false
             }
           ],
-          "title": "Ethernet Bytes Send Rate",
+          "title": "Ethernet Throughput",
           "type": "timeseries"
         }
       ],
@@ -1295,6 +1534,114 @@
           ],
           "title": "Remapped Rows Correctable",
           "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Use this graph to determine when uncorrectable row remaps occurred. ",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "host"
+                },
+                "properties": []
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 27
+          },
+          "id": 24,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "exemplar": false,
+              "expr": "max by(host, index) (lambda_guest_agent_nvidia_smi_remapped_rows_uncorrectable > 0)",
+              "format": "time_series",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Remapped Rows Uncorrectable (graph)",
+          "type": "timeseries"
         }
       ],
       "title": "GPU",
@@ -1359,7 +1706,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1375,7 +1723,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 44
+            "y": 4
           },
           "id": 1,
           "options": {
@@ -1437,7 +1785,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 44
+            "y": 4
           },
           "id": 2,
           "options": {
@@ -1559,7 +1907,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1575,7 +1924,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 45
+            "y": 5
           },
           "id": 12,
           "options": {
@@ -1652,7 +2001,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1668,7 +2018,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 45
+            "y": 5
           },
           "id": 18,
           "options": {
@@ -1745,14 +2095,16 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
                     "value": 80
                   }
                 ]
-              }
+              },
+              "unit": "s"
             },
             "overrides": []
           },
@@ -1760,7 +2112,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 61
+            "y": 13
           },
           "id": 19,
           "options": {
@@ -1837,7 +2189,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -1853,7 +2206,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 61
+            "y": 13
           },
           "id": 20,
           "options": {
@@ -1894,8 +2247,12 @@
     "list": [
       {
         "current": {
-          "text": "All",
-          "value": "$__all"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -1941,13 +2298,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Lambda Guest Agent",
   "uid": "edxq0q411fv28f",
-  "version": 27,
+  "version": 40,
   "weekStart": ""
 }
