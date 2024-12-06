@@ -29,6 +29,444 @@
         "x": 0,
         "y": 0
       },
+      "id": 28,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "Retransmits indicate an error with communicating with the NFS server.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 1
+          },
+          "id": 25,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "lambda_guest_agent_nfsstat_retrans{host=~\"$host\"}",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Retransmits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 1
+          },
+          "id": 27,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "rate(lambda_guest_agent_nfsstat_rtt{host=~\"$host\"}[$__rate_interval])",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Round Trip Time",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": true,
+                "axisColorMode": "series",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 8,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "bps"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "shades"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Read"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "shades"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Write"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 9
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "max by(host, mountpoint) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\", operation=\"READ\"}[$__rate_interval])) * 8",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "max by(host, mountpoint) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\", operation=\"WRITE\"}[$__rate_interval])) * -8",
+              "fullMetaSearch": false,
+              "hide": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "B",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Throughput",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 9
+          },
+          "id": 29,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "avg by(operation, ) (lambda_guest_agent_nfsstat_rtt_per_op{host=~\"$host\"})",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Average Round Trip Time Per Operation",
+          "type": "stat"
+        }
+      ],
+      "title": "NFS",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
       "id": 17,
       "panels": [
         {
@@ -153,7 +591,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 1
+            "y": 34
           },
           "id": 9,
           "options": {
@@ -278,7 +716,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 1
+            "y": 34
           },
           "id": 26,
           "options": {
@@ -311,264 +749,6 @@
           ],
           "title": "Local Disk Utilization Percent",
           "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "description": "Retransmits indicate an error with communicating with the NFS server.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 9
-          },
-          "id": 25,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.3.1",
-          "targets": [
-            {
-              "disableTextWrap": false,
-              "editorMode": "builder",
-              "expr": "lambda_guest_agent_nfsstat_retrans{host=~\"$host\"}",
-              "fullMetaSearch": false,
-              "includeNullMetadata": true,
-              "legendFormat": "__auto",
-              "range": true,
-              "refId": "A",
-              "useBackend": false
-            }
-          ],
-          "title": "NFS Retransmits",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": true,
-                "axisColorMode": "series",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 8,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "bps"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byFrameRefID",
-                  "options": "A"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "green",
-                      "mode": "shades"
-                    }
-                  },
-                  {
-                    "id": "custom.axisPlacement",
-                    "value": "left"
-                  },
-                  {
-                    "id": "custom.axisLabel",
-                    "value": "Read"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byFrameRefID",
-                  "options": "B"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "red",
-                      "mode": "shades"
-                    }
-                  },
-                  {
-                    "id": "custom.axisPlacement",
-                    "value": "right"
-                  },
-                  {
-                    "id": "custom.axisLabel",
-                    "value": "Write"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 9
-          },
-          "id": 21,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "11.3.1",
-          "targets": [
-            {
-              "disableTextWrap": false,
-              "editorMode": "builder",
-              "expr": "max by(host, mountpoint) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\", operation=\"READ\"}[$__rate_interval])) * 8",
-              "fullMetaSearch": false,
-              "includeNullMetadata": true,
-              "legendFormat": "__auto",
-              "range": true,
-              "refId": "A",
-              "useBackend": false
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-              },
-              "disableTextWrap": false,
-              "editorMode": "builder",
-              "expr": "max by(host, mountpoint) (rate(lambda_guest_agent_nfsstat_bytes{host=~\"$host\", operation=\"WRITE\"}[$__rate_interval])) * -8",
-              "fullMetaSearch": false,
-              "hide": false,
-              "includeNullMetadata": true,
-              "instant": false,
-              "legendFormat": "__auto",
-              "range": true,
-              "refId": "B",
-              "useBackend": false
-            }
-          ],
-          "title": "NFS Throughput",
-          "type": "timeseries"
         }
       ],
       "title": "Disk",
@@ -580,7 +760,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 1
+        "y": 2
       },
       "id": 16,
       "panels": [
@@ -650,7 +830,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 2
+            "y": 58
           },
           "id": 7,
           "options": {
@@ -753,7 +933,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 2
+            "y": 58
           },
           "id": 8,
           "options": {
@@ -902,7 +1082,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 10
+            "y": 66
           },
           "id": 10,
           "options": {
@@ -961,7 +1141,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 2
+        "y": 3
       },
       "id": 15,
       "panels": [
@@ -1031,7 +1211,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 3
+            "y": 59
           },
           "id": 3,
           "options": {
@@ -1093,7 +1273,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 3
+            "y": 59
           },
           "id": 4,
           "options": {
@@ -1222,7 +1402,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 11
+            "y": 67
           },
           "id": 5,
           "options": {
@@ -1284,7 +1464,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 11
+            "y": 67
           },
           "id": 6,
           "options": {
@@ -1399,7 +1579,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 19
+            "y": 75
           },
           "id": 22,
           "options": {
@@ -1499,7 +1679,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 19
+            "y": 75
           },
           "id": 23,
           "options": {
@@ -1608,7 +1788,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 27
+            "y": 83
           },
           "id": 24,
           "options": {
@@ -1653,7 +1833,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 3
+        "y": 4
       },
       "id": 14,
       "panels": [
@@ -1723,7 +1903,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 4
+            "y": 60
           },
           "id": 1,
           "options": {
@@ -1785,7 +1965,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 4
+            "y": 60
           },
           "id": 2,
           "options": {
@@ -1854,7 +2034,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 5
       },
       "id": 13,
       "panels": [
@@ -1924,7 +2104,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 5
+            "y": 61
           },
           "id": 12,
           "options": {
@@ -2018,7 +2198,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 5
+            "y": 61
           },
           "id": 18,
           "options": {
@@ -2112,7 +2292,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 13
+            "y": 69
           },
           "id": 19,
           "options": {
@@ -2206,7 +2386,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 13
+            "y": 69
           },
           "id": 20,
           "options": {
@@ -2247,12 +2427,8 @@
     "list": [
       {
         "current": {
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "prometheus",
@@ -2298,13 +2474,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
-    "to": "now"
+    "from": "2024-12-05T01:56:17.212Z",
+    "to": "2024-12-05T03:14:10.353Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Lambda Guest Agent",
   "uid": "edxq0q411fv28f",
-  "version": 40,
+  "version": 43,
   "weekStart": ""
 }
