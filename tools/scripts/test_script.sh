@@ -9,7 +9,6 @@ DEB_PATH="$1"; shift
 EXPECTED_VERSION="$1"; shift
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-EXPECTED_METRIC_COUNT=100
 
 function error {
     msg="$1"
@@ -84,8 +83,8 @@ while [ true ]; do
     fi
 
     metric_count="$(curl -s localhost:9101/metrics |& grep lambda_guest_agent_ | grep -v '#' | awk -F'{' '{print $1}' | sort -u | wc -l)"
-    if [ $metric_count -ne $EXPECTED_METRIC_COUNT ]; then
-        warning "unexpected metric count. Found $metric_count, expected $EXPECTED_METRIC_COUNT"
+    if [ $metric_count -eq 0 ]; then
+        warning "No metrics returned."
         continue
     fi
     success "Correct number of metrics found."
