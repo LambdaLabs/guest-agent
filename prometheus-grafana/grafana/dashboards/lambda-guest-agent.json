@@ -116,7 +116,7 @@
             {
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "lambda_guest_agent_nfsstat_retrans{host=~\"$host\"}",
+              "expr": "rate(lambda_guest_agent_nfsstat_retrans{host=~\"$host\"}[$__rate_interval])",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "__auto",
@@ -394,7 +394,21 @@
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "thresholds"
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
               },
               "mappings": [],
               "thresholds": {
@@ -422,28 +436,122 @@
           },
           "id": 29,
           "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
+            "combine": true,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
           },
           "pluginVersion": "11.3.1",
           "targets": [
             {
               "disableTextWrap": false,
               "editorMode": "builder",
-              "expr": "avg by(operation, ) (lambda_guest_agent_nfsstat_rtt_per_op{host=~\"$host\"})",
+              "exemplar": false,
+              "expr": "lambda_guest_agent_nfsstat_rtt_per_op{host=~\"$host\"}",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "NFS Average Round Trip Time Histogram",
+          "type": "histogram"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 17
+          },
+          "id": 30,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "rate(lambda_guest_agent_nfs_ops_timeouts{host=~\"$host\"}[$__rate_interval])",
               "fullMetaSearch": false,
               "includeNullMetadata": true,
               "legendFormat": "__auto",
@@ -452,8 +560,8 @@
               "useBackend": false
             }
           ],
-          "title": "NFS Average Round Trip Time Per Operation",
-          "type": "stat"
+          "title": "NFS Timeout Rate",
+          "type": "timeseries"
         }
       ],
       "title": "NFS",
@@ -519,8 +627,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -591,7 +698,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 34
+            "y": 146
           },
           "id": 9,
           "options": {
@@ -695,8 +802,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "yellow",
@@ -716,7 +822,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 34
+            "y": 146
           },
           "id": 26,
           "options": {
@@ -813,8 +919,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -830,7 +935,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 58
+            "y": 170
           },
           "id": 7,
           "options": {
@@ -916,8 +1021,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -933,7 +1037,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 58
+            "y": 170
           },
           "id": 8,
           "options": {
@@ -1018,8 +1122,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1082,7 +1185,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 66
+            "y": 178
           },
           "id": 10,
           "options": {
@@ -1194,8 +1297,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1211,7 +1313,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 59
+            "y": 60
           },
           "id": 3,
           "options": {
@@ -1273,7 +1375,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 59
+            "y": 60
           },
           "id": 4,
           "options": {
@@ -1385,8 +1487,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1402,7 +1503,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 67
+            "y": 68
           },
           "id": 5,
           "options": {
@@ -1464,7 +1565,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 67
+            "y": 68
           },
           "id": 6,
           "options": {
@@ -1550,8 +1651,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1579,7 +1679,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 75
+            "y": 76
           },
           "id": 22,
           "options": {
@@ -1638,8 +1738,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1679,7 +1778,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 75
+            "y": 76
           },
           "id": 23,
           "options": {
@@ -1764,8 +1863,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1788,7 +1886,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 83
+            "y": 84
           },
           "id": 24,
           "options": {
@@ -1886,8 +1984,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1903,7 +2000,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 60
+            "y": 61
           },
           "id": 1,
           "options": {
@@ -1965,7 +2062,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 60
+            "y": 61
           },
           "id": 2,
           "options": {
@@ -2087,8 +2184,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2104,7 +2200,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 61
+            "y": 62
           },
           "id": 12,
           "options": {
@@ -2181,8 +2277,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2198,7 +2293,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 61
+            "y": 62
           },
           "id": 18,
           "options": {
@@ -2275,8 +2370,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2292,7 +2386,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 69
+            "y": 70
           },
           "id": 19,
           "options": {
@@ -2369,8 +2463,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2386,7 +2479,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 69
+            "y": 70
           },
           "id": 20,
           "options": {
@@ -2474,13 +2567,13 @@
     ]
   },
   "time": {
-    "from": "2024-12-05T01:56:17.212Z",
-    "to": "2024-12-05T03:14:10.353Z"
+    "from": "2024-12-06T19:53:43.836Z",
+    "to": "2024-12-06T22:10:52.829Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Lambda Guest Agent",
   "uid": "edxq0q411fv28f",
-  "version": 43,
+  "version": 52,
   "weekStart": ""
 }
