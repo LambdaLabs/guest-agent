@@ -1,7 +1,7 @@
 name: Test e2e
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: &args
     inputs:
       version:
         description: "Version to promote, without the leading 'v'."
@@ -11,6 +11,7 @@ on:
         description: "IP address of Lambda admin VM to perform e2e tests on."
         type: string
         required: true
+  workflow_call: *args
 
 run-name: "Test v${{ github.event.inputs.version }} e2e | @${{ github.actor}}"
 
@@ -18,7 +19,7 @@ permissions:
   id-token: write
   contents: read
 
-jobs:  
+jobs:
   test_e2e:
     runs-on: lambda-ubuntu-latest
     environment: test-e2e
@@ -60,7 +61,7 @@ jobs:
           echo "StrictHostKeyChecking accept-new" >> ~/.ssh/config
         env:
           STARBASE_SSH_KEY_PRIVATE_BASE64: "${{ secrets.STARBASE_SSH_KEY_PRIVATE_BASE64 }}"
-      
+
       - name: Download artifact from staging
         run: task jfrog.download
         env:
