@@ -19,6 +19,10 @@ jobs:
     runs-on: lambda-ubuntu-latest
     environment: release-prod
     steps:
+      - uses: ./.github/workflows/test-e2e.yaml
+        with:
+          version: ${{ github.event.inputs.version }}
+          remote_test_host: ${{ vars.REMOTE_TEST_HOST }}
       - uses: jfrog/setup-jfrog-cli@v4
         env:
           JF_URL: ${{ vars.ARTIFACTORY_URL }}
@@ -42,7 +46,7 @@ jobs:
           sudo apt update
           sudo apt install -y deb-s3
           sudo gem install deb-s3
-      
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
