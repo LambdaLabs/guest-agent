@@ -19,7 +19,6 @@ jobs:
     uses: ./.github/workflows/test-e2e.yaml
     with:
       version: ${{ github.event.inputs.version }}
-      remote_test_host: ${{ vars.REMOTE_TEST_HOST }}
     secrets: inherit
   release-prod:
     runs-on: lambda-ubuntu-latest
