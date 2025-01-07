@@ -1,7 +1,7 @@
 name: Test e2e
 
 on:
-  workflow_dispatch: &args
+  workflow_dispatch:
     inputs:
       version:
         description: "Version to promote, without the leading 'v'."
@@ -11,7 +11,16 @@ on:
         description: "IP address of Lambda admin VM to perform e2e tests on."
         type: string
         required: true
-  workflow_call: *args
+  workflow_call:
+    inputs:
+      version:
+        description: "Version to promote, without the leading 'v'."
+        type: string
+        required: true
+      remote_test_host:
+        description: "IP address of Lambda admin VM to perform e2e tests on."
+        type: string
+        required: true
 
 run-name: "Test v${{ github.event.inputs.version }} e2e | @${{ github.actor}}"
 
