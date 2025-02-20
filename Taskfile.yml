@@ -104,7 +104,7 @@ tasks:
     - task: build
       vars:
         GUEST_AGENT_ARCH: "{{ .GUEST_AGENT_ARCH }}"
-    - cd goreleaser/ && goreleaser release --clean
+    - jfrog rt upload --deb stable/main/{{ .GUEST_AGENT_ARCH }} ./dist/lambda-guest-agent-*.deb guest-agent/
     requires:
       vars:
         - GITHUB_TOKEN
