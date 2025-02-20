@@ -6,17 +6,17 @@ builds:
     main: ./
     goos:
     - linux
-    goarch:
-    - amd64
+    goarch: [amd64]
   - id: guest-agent-arm64
     main: ./
     goos:
     - linux
-    goarch:
-    - arm64
+    goarch: [arm64]
 
 nfpms:
-  - id: guest-agent
+  - &nfpm
+    id: guest-agent-amd64
+    builds: [guest-agent-amd64]
     package_name: lambda-guest-agent
     vendor: Lambda Labs
     homepage: https://github.com/lambdal/guest-agent
@@ -30,11 +30,25 @@ nfpms:
     - src: ../build/files/usr/local/bin/lambda/
       dst: /usr/local/bin/lambda/
       type: tree
+    - src: ../build/files/usr/local/bin/telegraf-amd64
+      dst: /usr/local/bin/lambda/telegraf
     scripts:
       preinstall: "../build/files/scripts/preinstall.sh"
       postinstall: "../build/files/scripts/postinstall.sh"
       preremove: "../build/files/scripts/preremove.sh"
       postremove: "../build/files/scripts/postremove.sh"
+  - <<: *nfpm
+    id: guest-agent-arm64
+    builds: [guest-agent-arm64]
+    contents:
+    - src: ../build/files/etc/lambda/guest-agent/
+      dst: /etc/lambda/guest-agent/
+      type: tree
+    - src: ../build/files/usr/local/bin/lambda/
+      dst: /usr/local/bin/lambda/
+      type: tree
+    - src: ../build/files/usr/local/bin/telegraf-arm64
+      dst: /usr/local/bin/lambda/telegraf
 
 archives:
   - id: guest-agent
@@ -68,9 +82,7 @@ release:
   - default
 
 publishers:
-- name: artifactory-staging
+- name: artifactory
   cmd: >-
     jfrog rt upload --deb stable/main/{{ .Arch }} "{{ .ArtifactName }}" "guest-agent/"
   dir: "{{ dir .ArtifactPath }}"
-
-
