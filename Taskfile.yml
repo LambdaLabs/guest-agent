@@ -88,9 +88,6 @@ tasks:
       - task: build.clean
       - task: build.telegraf
       - cd goreleaser && goreleaser build --clean
-    requires:
-      vars:
-        - GITHUB_TOKEN
 
   build.snapshot:
     desc: Build only the binary artifacts.
@@ -98,21 +95,12 @@ tasks:
       - task: build.clean
       - task: build.telegraf
       - cd goreleaser && goreleaser build --clean --snapshot
-    requires:
-      vars:
-        - GITHUB_TOKEN
 
   release.staging:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     cmds:
     - task: build
-      vars:
-        GUEST_AGENT_ARCH: "{{ .GUEST_AGENT_ARCH }}"
     - cd goreleaser/ && goreleaser release --clean
-    requires:
-      vars:
-        - GITHUB_TOKEN
-        - GUEST_AGENT_ARCHS
 
   release.snapshot:
     desc: Build binaries, create .deb files. Ignore dirty git states.
