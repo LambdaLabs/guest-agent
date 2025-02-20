@@ -68,10 +68,11 @@ jobs:
         env:
           JFROG_DOWNLOAD_VERSION: ${{ github.event.inputs.version }}
           JFROG_DOWNLOAD_DIR: download/
+          GUEST_AGENT_ARCH: amd64
 
       - name: Get path of downloaded artifact
         id: get_artifact_path
-        run: echo "debian_path=$(find ./download -type f -name '*amd64.deb' | head -n 1)" >> $GITHUB_OUTPUT
+        run: echo "debian_path=$(find ./download -type f -name '*.deb' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Run e2e test
         run: task test.e2e
