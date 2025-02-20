@@ -134,7 +134,7 @@ tasks:
         vars:
           JFROG_DOWNLOAD_VERSION: "{{ .GUEST_AGENT_PROMOTE_VERSION }}"
           JFROG_DOWNLOAD_DIR: "download/"
-          GUEST_AGENT_ARCH: "{{ .GUEST_AGENT_ARCH }}"
+          GUEST_AGENT_ARCH: "{{ .ITEM.GUEST_AGENT_ARCH }}"
       - task: deb-s3.upload
         vars:
           FROM_DIR: download/
