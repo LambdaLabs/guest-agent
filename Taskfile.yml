@@ -4,7 +4,7 @@ dotenv: ["guest-agent.env"]
 
 tasks:
   mkdir:
-    requires: 
+    requires:
       vars: [DIR]
     cmds:
       - mkdir -p {{.DIR}}
@@ -19,13 +19,13 @@ tasks:
     deps: [build-tools]
     cmds:
     - ./tools/tools tag --dry-run=false
-  
+
   install-deps:
     desc: Install tool dependencies
     dir: '{{.ROOT_DIR}}/tools'
     cmds:
     - cat external-tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
-  
+
   tag.push:
     desc: Push tags to origin
     cmds:
@@ -52,9 +52,12 @@ tasks:
       - mv $GUEST_AGENT_TELEGRAF_BUILD_DIR/telegraf $GUEST_AGENT_TEMPLATES_OUTDIR/$GUEST_AGENT_LAMBDA_BIN_DIR/telegraf
     generates:
       - ./build/files/$GUEST_AGENT_LAMBDA_BIN_DIR/telegraf
+    requires:
+      vars:
+        - GUEST_AGENT_ARCH
     env:
       GOOS: linux
-      GOARCH: amd64
+      GOARCH: "{{ .GUEST_AGENT_ARCH }}"
 
   build.templates:
     desc: Render configuration templates
@@ -74,29 +77,38 @@ tasks:
     cmds:
       - task: build.clean
       - task: build.telegraf
-      - cd goreleaser && goreleaser build --clean
+        vars:
+          GUEST_AGENT_ARCH: "{{ .GUEST_AGENT_ARCH }}"
+      - cd goreleaser && goreleaser build --clean --id guest-agent-{{ .GUEST_AGENT_ARCH }}
     requires:
       vars:
-      - GITHUB_TOKEN
-  
+        - GITHUB_TOKEN
+        - GUEST_AGENT_ARCH
+
   build.snapshot:
     desc: Build only the binary artifacts.
     cmds:
       - task: build.clean
       - task: build.telegraf
+        vars:
+          GUEST_AGENT_ARCH: "{{ .GUEST_AGENT_ARCH }}"
       - cd goreleaser && goreleaser build --clean --snapshot
     requires:
       vars:
-      - GITHUB_TOKEN
+        - GITHUB_TOKEN
+        - GUEST_AGENT_ARCH
 
   release.staging:
     desc: Build binaries, create .deb files, and upload/release the artifacts.
     cmds:
     - task: build
+      vars:
+        GUEST_AGENT_ARCH: "{{ .GUEST_AGENT_ARCH }}"
     - cd goreleaser/ && goreleaser release --clean
     requires:
       vars:
-      - GITHUB_TOKEN
+        - GITHUB_TOKEN
+        - GUEST_AGENT_ARCH
 
   release.snapshot:
     desc: Build binaries, create .deb files. Ignore dirty git states.

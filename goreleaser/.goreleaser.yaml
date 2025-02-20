@@ -2,12 +2,17 @@ version: 1
 project_name: lambda-guest-agent
 
 builds:
-  - id: guest-agent
+  - id: guest-agent-amd64
     main: ./
     goos:
     - linux
     goarch:
     - amd64
+  - id: guest-agent-arm64
+    main: ./
+    goos:
+    - linux
+    goarch:
     - arm64
 
 nfpms:

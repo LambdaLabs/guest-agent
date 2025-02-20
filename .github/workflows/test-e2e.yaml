@@ -24,6 +24,9 @@ jobs:
   test_e2e:
     runs-on: lambda-ubuntu-latest
     environment: test-e2e
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -68,15 +71,23 @@ jobs:
         env:
           JFROG_DOWNLOAD_VERSION: ${{ github.event.inputs.version }}
           JFROG_DOWNLOAD_DIR: download/
-          GUEST_AGENT_ARCH: amd64
+          GUEST_AGENT_ARCH: ${{ matrix.arch }}
 
       - name: Get path of downloaded artifact
         id: get_artifact_path
         run: echo "debian_path=$(find ./download -type f -name '*.deb' | head -n 1)" >> $GITHUB_OUTPUT
 
+      - name: Determine the remote test host
+        id: remote_test_host
+        run: |
+          if [ "${{ matrix.arch }}" -eq "amd64" ]; then
+            echo "ip=${{ vars.REMOTE_TEST_HOST_AMD64 }}" >> $GITHUB_OUTPUT
+          else
+            echo "ip=${{ vars.REMOTE_TEST_HOST_ARM64 }}" >> $GITHUB_OUTPUT
+          fi
       - name: Run e2e test
         run: task test.e2e
         env:
           GUEST_AGENT_DEBIAN_PATH: "../${{ steps.get_artifact_path.outputs.debian_path }}"
           GUEST_AGENT_EXPECTED_VERSION: ${{ github.event.inputs.version }}
-          GUEST_AGENT_REMOTE_TEST_HOST: ${{ vars.REMOTE_TEST_HOST }}
+          GUEST_AGENT_REMOTE_TEST_HOST: ${{ steps.remote_test_host.outputs.ip }}
