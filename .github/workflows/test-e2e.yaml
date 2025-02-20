@@ -80,7 +80,7 @@ jobs:
       - name: Determine the remote test host
         id: remote_test_host
         run: |
-          if [ "${{ matrix.arch }}" -eq "amd64" ]; then
+          if [ "${{ matrix.arch }}" = "amd64" ]; then
             echo "ip=${{ vars.REMOTE_TEST_HOST_AMD64 }}" >> $GITHUB_OUTPUT
           else
             echo "ip=${{ vars.REMOTE_TEST_HOST_ARM64 }}" >> $GITHUB_OUTPUT
