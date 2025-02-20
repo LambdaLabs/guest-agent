@@ -3,7 +3,7 @@ module github.com/lambdal/guest-agent/tools/external-tools
 go 1.22.3
 
 require (
-	github.com/go-task/task/v3 v3.38.0
+	github.com/go-task/task/v3 v3.41.0
 	github.com/goreleaser/goreleaser v1.26.2
 )
 
