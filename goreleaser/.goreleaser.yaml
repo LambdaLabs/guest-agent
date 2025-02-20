@@ -29,7 +29,7 @@ nfpms:
       type: tree
     - src: ../build/files/usr/local/bin/lambda/guest-agent/guest-agent-update.sh
       dst: /usr/local/bin/lambda/guest-agent/guest-agent-update.sh
-    - src: ../build/files/usr/local/bin/telegraf-amd64
+    - src: ../build/files/usr/local/bin/lambda/guest-agent/telegraf-amd64
       dst: /usr/local/bin/lambda/guest-agent/telegraf
     scripts:
       preinstall: "../build/files/scripts/preinstall.sh"
