@@ -1,4 +1,4 @@
-name: Create new Git tag
+name: Create new Git tag and release artifact to Github/Artifactory.
 
 on:
   push:
@@ -48,6 +48,7 @@ jobs:
   release_staging:
     runs-on: lambda-ubuntu-latest
     needs: tag_and_push
+    environment: release-staging
     # Return code of 0 is returned only if a new tag was truly
     # pushed. Otherwise there is nothing to release.
     if: needs.tag_and_push.outputs.tag_exit_code == 0
@@ -78,4 +79,4 @@ jobs:
       - name: Build and Release
         run: task release.staging
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
