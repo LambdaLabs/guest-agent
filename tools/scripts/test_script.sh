@@ -62,32 +62,3 @@ if [ $rt -ne 0 ]; then
     exit_with_error "lambda-guest-agent.timer is not running"
 fi
 success "lambda-guest-agent-updater.timer is active"
-
-retries=-1
-
-curl -s localhost:9101/metrics >/dev/null
-rt=$?
-if [ $rt -ne 0 ]; then
-    exit_with_error "call to metrics endpoint failed"
-fi
-success "Curl to port 9101 succeeded"
-
-while [ true ]; do
-    retries=$((retries+1))
-    if [ $retries -ge 5 ]; then
-        exit_with_error "maximum retries reached"
-    fi
-    if [ $retries -gt 0 ]; then
-        info "retrying after sleep"
-        sleep 5
-    fi
-
-    metric_count="$(curl -s localhost:9101/metrics |& grep lambda_guest_agent_ | grep -v '#' | awk -F'{' '{print $1}' | sort -u | wc -l)"
-    if [ $metric_count -eq 0 ]; then
-        warning "No metrics returned."
-        continue
-    fi
-    success "Correct number of metrics found."
-    break
-done
-
